@@ -36,6 +36,8 @@ export class InscricaoFormComponent implements OnInit {
 
   initializeForm() {
     this.formulario = this.fb.group({
+      // Tipo de inscrição (obrigatório)
+      tipoInscricao: ['', Validators.required],
       // Informações básicas (obrigatórias)
       email: ['', [Validators.required, Validators.email]],
       nomeCompleto: ['', Validators.required],

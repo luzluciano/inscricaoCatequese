@@ -1,0 +1,245 @@
+.admin-status-container {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+
+    h2 {
+      margin: 0;
+      font-size: 24px;
+      color: #333;
+    }
+
+    .btn-voltar {
+      padding: 8px 16px;
+      border: 1px solid #ccc;
+      background-color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      color: #666;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #f5f5f5;
+        border-color: #999;
+      }
+    }
+  }
+
+  .loading, .error {
+    text-align: center;
+    padding: 20px;
+    border-radius: 4px;
+    margin: 20px 0;
+  }
+
+  .loading {
+    background-color: #f8f9fa;
+    color: #666;
+  }
+
+  .error {
+    background-color: #fee;
+    color: #c00;
+    border: 1px solid #fcc;
+  }
+
+  .inscricao-details {
+    .section {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      h3 {
+        margin: 0 0 20px 0;
+        color: #333;
+        font-size: 18px;
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+
+        .info-item {
+          .label {
+            display: block;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+          }
+
+          .value {
+            display: block;
+            font-size: 16px;
+            color: #333;
+          }
+
+          &.full-width {
+            grid-column: 1 / -1;
+          }
+
+          .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            
+            &:focus {
+              border-color: #0066cc;
+              outline: none;
+              box-shadow: 0 0 0 2px rgba(0,102,204,0.2);
+            }
+          }
+
+          textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+          }
+
+          &.action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            grid-column: 1 / -1;
+            margin-top: 10px;
+          }
+
+          .btn-salvar {
+            padding: 10px 24px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+
+            &:hover {
+              background-color: #218838;
+            }
+
+            &:disabled {
+              background-color: #6c757d;
+              cursor: not-allowed;
+            }
+          }
+        }
+      }
+
+      .history-section {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+
+        h4 {
+          font-size: 16px;
+          color: #666;
+          margin-bottom: 15px;
+        }
+      }
+    }
+  }
+}
+
+.table-responsive {
+  overflow-x: auto;
+  margin: 0 -20px;
+  padding: 0 20px;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+
+  th {
+    background-color: #f8f9fa;
+    font-weight: 500;
+    color: #495057;
+    font-size: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  td {
+    font-size: 14px;
+    vertical-align: middle;
+  }
+
+  tbody tr:hover {
+    background-color: #f8f9fa;
+  }
+
+  .date-cell {
+    white-space: nowrap;
+    color: #666;
+    width: 120px;
+  }
+
+  .status-cell {
+    width: 140px;
+  }
+
+  .obs-cell {
+    min-width: 200px;
+    color: #333;
+  }
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  min-width: 100px;
+
+  &.Em-Andamento {
+    background-color: #e3f2fd;
+    color: #1976d2;
+  }
+
+  &.Desistência {
+    background-color: #fce4ec;
+    color: #c2185b;
+  }
+
+  &.Concluído {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  &:empty::after {
+    content: 'Não definido';
+    color: #666;
+  }
+}
+
+.no-history {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-style: italic;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}

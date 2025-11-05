@@ -215,6 +215,21 @@
             background: #fce4ec;
             color: #c2185b;
           }
+
+          &.badge-catequese {
+            background: #e8f5e9;
+            color: #2e7d32;
+          }
+
+          &.badge-catecumenato {
+            background: #fff3e0;
+            color: #ef6c00;
+          }
+
+          &.badge-crisma {
+            background: #e3f2fd;
+            color: #1976d2;
+          }
         }
         
         .status {
@@ -464,6 +479,15 @@
   .btn-info { background: #17a2b8; color: white; &:hover { background: #138496; } }
   .btn-warning { background: #ffc107; color: #212529; &:hover { background: #e0a800; } }
   .btn-danger { background: #dc3545; color: white; &:hover { background: #c82333; } }
+  .btn-status { 
+    background: linear-gradient(135deg, #9C27B0 0%, #673AB7 100%); 
+    color: white; 
+    &:hover { 
+      background: linear-gradient(135deg, #8E24AA 0%, #5E35B1 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(156,39,176,0.3);
+    } 
+  }
 
   @keyframes spin {
     0% { transform: rotate(0deg); }
@@ -476,6 +500,7 @@
     .inscricoes-table {
       // Ajustes para campos específicos
       th, td {
+        &.tipo-column { min-width: 120px; max-width: 140px; text-align: center; }
         &.nome-column { min-width: 180px; max-width: 200px; }
         &.email-column { min-width: 200px; max-width: 250px; }
         &.endereco-column { min-width: 250px; max-width: 300px; }
@@ -500,13 +525,40 @@
       // Status badges melhorados
       .status-badge {
         display: inline-block;
-        padding: 3px 8px;
-        border-radius: 10px;
-        font-size: 0.75em;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+        text-align: center;
+        min-width: 100px;
+
+        &.Em-Andamento {
+          background-color: #e3f2fd;
+          color: #1976d2;
+        }
+
+        &.Desistência {
+          background-color: #fce4ec;
+          color: #c2185b;
+        }
+
+        &.Concluído {
+          background-color: #e8f5e9;
+          color: #2e7d32;
+        }
+
+        .status-data {
+          display: block;
+          font-size: 10px;
+          margin-top: 2px;
+          opacity: 0.8;
+        }
+
+        &:empty::after {
+          content: 'Não definido';
+          color: #666;
+        }
+
         &.sim {
           background: #d4edda;
           color: #155724;

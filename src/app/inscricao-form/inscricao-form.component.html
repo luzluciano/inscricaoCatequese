@@ -2,7 +2,7 @@
   <!-- NAVEGAÇÃO -->
   <nav class="main-nav">
     <div class="nav-brand">
-      <h1>✝️ Cadastro de Crisma</h1>
+      <h1>✝️ Cadastro de Catequese</h1>
       <p>Comunidade Nossa Senhora Aparecida - Potuvera</p>
     </div>
     <div class="nav-links">
@@ -15,13 +15,23 @@
   <main class="main-content">
     <div class="container">
       <div class="header">
-        <h1>✝️ Inscrição para Crisma</h1>
+        <h1>✝️ Inscrição para Catequese</h1>
         <p>Comunidade Nossa Senhora Aparecida - Potuvera - Preparação Sacramental</p>
       </div>
 
       <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
         <fieldset>
-          <legend>👤 Informações do Crismando</legend>
+          <legend>👤 Informações do Inscrito</legend>
+          
+          <label>
+            Inscrição para <span class="required">*</span>
+            <select formControlName="tipoInscricao">
+              <option value="">Selecione o tipo de inscrição</option>
+              <option value="catequese">Catequese</option>
+              <option value="catecumenato">Catecumenato</option>
+              <option value="crisma">Crisma</option>
+            </select>
+          </label>
           
           <label>
             E-mail <span class="required">*</span>
@@ -242,6 +252,7 @@
         <div *ngIf="formulario.invalid" class="alert alert-error">
           <h4>⚠️ Campos obrigatórios faltando:</h4>
           <ul>
+            <li *ngIf="formulario.get('tipoInscricao')?.invalid">Tipo de Inscrição</li>
             <li *ngIf="formulario.get('email')?.invalid">E-mail</li>
             <li *ngIf="formulario.get('nomeCompleto')?.invalid">Nome Completo</li>
             <li *ngIf="formulario.get('dataNascimento')?.invalid">Data de Nascimento</li>

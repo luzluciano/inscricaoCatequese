@@ -3,7 +3,7 @@
   <div class="header">
     <div class="header-content">
       <div class="header-text">
-        <h1>🔍 Consulta de Inscrições - Crisma</h1>
+        <h1>🔍 Consulta de Inscrições</h1>
         <p>Comunidade Nossa Senhora Aparecida - Potuvera</p>
       </div>
       <div class="header-actions">
@@ -134,6 +134,8 @@
       <table class="inscricoes-table">
         <thead>
           <tr>
+            <th class="tipo-column">Tipo de Inscrição</th>
+            <th class="status-column">Status</th>
             <th class="nome-column">Nome Completo</th>
             <th class="email-column">E-mail</th>
             <th class="data-column">Data Nascimento</th>
@@ -169,6 +171,25 @@
         </thead>
         <tbody>
           <tr *ngFor="let inscricao of inscricoes; let i = index" [class.even]="i % 2 === 0">
+            <td class="tipo-column">
+              <span class="badge" [class.badge-catequese]="inscricao.tipoInscricao === 'catequese'"
+                    [class.badge-catecumenato]="inscricao.tipoInscricao === 'catecumenato'"
+                    [class.badge-crisma]="inscricao.tipoInscricao === 'crisma'">
+                {{ inscricao.tipoInscricao | titlecase }}
+              </span>
+            </td>
+            <td class="status-column">
+              <span class="status-badge" [ngClass]="{
+                'Em-Andamento': inscricao.status?.atual === 'Em Andamento',
+                'Desistência': inscricao.status?.atual === 'Desistência',
+                'Concluído': inscricao.status?.atual === 'Concluído'
+              }">
+                {{ inscricao.status?.atual }}
+                <span class="status-data" *ngIf="inscricao.status?.dataAtualizacao">
+                  ({{ formatarData(inscricao.status?.dataAtualizacao) }})
+                </span>
+              </span>
+            </td>
             <td class="nome-column">
               <span class="nome-principal">{{ inscricao.nomeCompleto }}</span>
             </td>
@@ -281,6 +302,9 @@
                 </button>
                 <button class="btn-small btn-danger" title="Excluir" (click)="excluirInscricao(inscricao)">
                   🗑️
+                </button>
+                <button class="btn-small btn-status" title="Status" [routerLink]="['/admin-status', inscricao.id]">
+                  📊
                 </button>
               </div>
             </td>

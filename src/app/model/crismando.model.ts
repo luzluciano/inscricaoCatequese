@@ -1,11 +1,19 @@
+interface StatusInfo {
+  atual: string;
+  observacao: string;
+  dataAtualizacao: Date | null;
+}
+
 export interface Crismando {
   id?: number;
   email: string;
   nomeCompleto: string;
+  status?: StatusInfo;
   dataNascimento: Date;
   naturalidade: string;
   sexo: 'Masculino' | 'Feminino';
   endereco: string;
+  tipoInscricao: 'catequese' | 'catecumenato' | 'crisma';
 
   batizado: boolean;
   paroquiaBatismo: string;

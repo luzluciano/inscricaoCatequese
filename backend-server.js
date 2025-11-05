@@ -76,8 +76,14 @@ pool.on('error', (err) => {
 // Função para converter linha do banco para objeto frontend
 function convertRowToInscricao(row) {
   return {
+    tipoInscricao: row.tipo_inscricao,
     id: row.id,
     email: row.email,
+    status: {
+      atual: row.ultimo_status || 'Não definido',
+      observacao: row.ultimo_status_obs || '',
+      dataAtualizacao: row.ultimo_status_data || null
+    },
     nomeCompleto: row.nome_completo,
     dataNascimento: row.data_nascimento,
     naturalidade: row.naturalidade,
@@ -191,7 +197,7 @@ app.post('/api/inscricoes', async (req, res) => {
     const query = `
       INSERT INTO inscricoes_crisma (
         email, nome_completo, data_nascimento, naturalidade, sexo, endereco,
-        batizado, paroquia_batismo, diocese_batismo, comunhao, paroquia_comunhao, diocese_comunhao,
+        tipo_inscricao, batizado, paroquia_batismo, diocese_batismo, comunhao, paroquia_comunhao, diocese_comunhao,
         telefone_whatsapp, email_contato,
         nome_pai, estado_civil_pai, naturalidade_pai,
         nome_mae, estado_civil_mae, naturalidade_mae,
@@ -200,19 +206,19 @@ app.post('/api/inscricoes', async (req, res) => {
         data_inicio_curso, comunidade_curso, nome_catequista, horario_curso
       ) VALUES (
         $1, $2, $3, $4, $5, $6,
-        $7, $8, $9, $10, $11, $12,
-        $13, $14,
-        $15, $16, $17,
-        $18, $19, $20,
-        $21, $22, $23,
-        $24, $25,
-        $26, $27, $28, $29
+        $7, $8, $9, $10, $11, $12, $13,
+        $14, $15,
+        $16, $17, $18,
+        $19, $20, $21,
+        $22, $23, $24,
+        $25, $26,
+        $27, $28, $29, $30
       ) RETURNING id, created_at;
     `;
 
     const values = [
       dados.email, dados.nomeCompleto, dados.dataNascimento, dados.naturalidade, dados.sexo, dados.endereco,
-      dados.batizado, dados.paroquiaBatismo, dados.dioceseBatismo, dados.comunhao, dados.paroquiaComunhao, dados.dioceseComunhao,
+      dados.tipoInscricao, dados.batizado, dados.paroquiaBatismo, dados.dioceseBatismo, dados.comunhao, dados.paroquiaComunhao, dados.dioceseComunhao,
       dados.telefoneWhatsApp, dados.emailContato,
       dados.nomePai, dados.estadoCivilPai, dados.naturalidadePai,
       dados.nomeMae, dados.estadoCivilMae, dados.naturalidadeMae,
@@ -223,6 +229,13 @@ app.post('/api/inscricoes', async (req, res) => {
 
     const result = await pool.query(query, values);
     const novaInscricao = result.rows[0];
+    
+    // Criar registro de status inicial
+    const statusQuery = `
+      INSERT INTO status_controle (inscricao_id, status, observacao, data_atualizacao)
+      VALUES ($1, 'Em Andamento', 'Cadastro inicial', CURRENT_TIMESTAMP)
+    `;
+    await pool.query(statusQuery, [novaInscricao.id]);
     
     res.json({
       success: true,
@@ -298,13 +311,29 @@ app.get('/api/inscricoes', async (req, res) => {
     }
     
     // Construir query final
-    let query = 'SELECT * FROM inscricoes_crisma';
+    let query = `
+      SELECT 
+        i.*,
+        sh.status as ultimo_status,
+        sh.observacao as ultimo_status_obs,
+        sh.data_atualizacao as ultimo_status_data
+      FROM inscricoes_crisma i
+      LEFT JOIN (
+        SELECT DISTINCT ON (inscricao_id) 
+          inscricao_id,
+          status,
+          observacao,
+          data_atualizacao
+        FROM status_historico
+        ORDER BY inscricao_id, created_at DESC
+      ) sh ON i.id = sh.inscricao_id
+    `;
     
     if (whereConditions.length > 0) {
       query += ' WHERE ' + whereConditions.join(' AND ');
     }
     
-    query += ` ORDER BY created_at DESC LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
+    query += ` ORDER BY i.id DESC LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
     queryParams.push(limit, offset);
     
     console.log('🔍 Query de consulta:', query);
@@ -478,37 +507,38 @@ app.put('/api/inscricoes/:id', async (req, res) => {
         naturalidade = $4,
         sexo = $5,
         endereco = $6,
-        batizado = $7,
-        paroquia_batismo = $8,
-        diocese_batismo = $9,
-        comunhao = $10,
-        paroquia_comunhao = $11,
-        diocese_comunhao = $12,
-        telefone_whatsapp = $13,
-        email_contato = $14,
-        nome_pai = $15,
-        estado_civil_pai = $16,
-        naturalidade_pai = $17,
-        nome_mae = $18,
-        estado_civil_mae = $19,
-        naturalidade_mae = $20,
-        pais_casados_igreja = $21,
-        paroquia_casamento_pais = $22,
-        diocese_casamento_pais = $23,
-        nome_padrinho_madrinha = $24,
-        padrinho_crismado = $25,
-        data_inicio_curso = $26,
-        comunidade_curso = $27,
-        nome_catequista = $28,
-        horario_curso = $29,
+        tipo_inscricao = $7,
+        batizado = $8,
+        paroquia_batismo = $9,
+        diocese_batismo = $10,
+        comunhao = $11,
+        paroquia_comunhao = $12,
+        diocese_comunhao = $13,
+        telefone_whatsapp = $14,
+        email_contato = $15,
+        nome_pai = $16,
+        estado_civil_pai = $17,
+        naturalidade_pai = $18,
+        nome_mae = $19,
+        estado_civil_mae = $20,
+        naturalidade_mae = $21,
+        pais_casados_igreja = $22,
+        paroquia_casamento_pais = $23,
+        diocese_casamento_pais = $24,
+        nome_padrinho_madrinha = $25,
+        padrinho_crismado = $26,
+        data_inicio_curso = $27,
+        comunidade_curso = $28,
+        nome_catequista = $29,
+        horario_curso = $30,
         updated_at = NOW()
-      WHERE id = $30
+      WHERE id = $31
       RETURNING *
     `;
     
     const values = [
       dados.email, dados.nomeCompleto, dados.dataNascimento, dados.naturalidade, dados.sexo, dados.endereco,
-      dados.batizado, dados.paroquiaBatismo, dados.dioceseBatismo, dados.comunhao, dados.paroquiaComunhao, dados.dioceseComunhao,
+      dados.tipoInscricao, dados.batizado, dados.paroquiaBatismo, dados.dioceseBatismo, dados.comunhao, dados.paroquiaComunhao, dados.dioceseComunhao,
       dados.telefoneWhatsApp, dados.emailContato,
       dados.nomePai, dados.estadoCivilPai, dados.naturalidadePai,
       dados.nomeMae, dados.estadoCivilMae, dados.naturalidadeMae,
@@ -629,7 +659,7 @@ app.post('/api/inscricoes-com-arquivos', upload.fields([
     const query = `
       INSERT INTO inscricoes_crisma (
         email, nome_completo, data_nascimento, naturalidade, sexo, endereco,
-        batizado, paroquia_batismo, diocese_batismo, comunhao, paroquia_comunhao, diocese_comunhao,
+        tipo_inscricao, batizado, paroquia_batismo, diocese_batismo, comunhao, paroquia_comunhao, diocese_comunhao,
         telefone_whatsapp, email_contato,
         nome_pai, estado_civil_pai, naturalidade_pai,
         nome_mae, estado_civil_mae, naturalidade_mae,
@@ -640,21 +670,21 @@ app.post('/api/inscricoes-com-arquivos', upload.fields([
         certidao_batismo_data, certidao_batismo_nome, certidao_batismo_tipo, certidao_batismo_tamanho
       ) VALUES (
         $1, $2, $3, $4, $5, $6,
-        $7, $8, $9, $10, $11, $12,
-        $13, $14,
-        $15, $16, $17,
-        $18, $19, $20,
-        $21, $22, $23,
-        $24, $25,
-        $26, $27, $28, $29,
-        $30, $31, $32, $33,
-        $34, $35, $36, $37
+        $7, $8, $9, $10, $11, $12, $13,
+        $14, $15,
+        $16, $17, $18,
+        $19, $20, $21,
+        $22, $23, $24,
+        $25, $26,
+        $27, $28, $29, $30,
+        $31, $32, $33, $34,
+        $35, $36, $37, $38
       ) RETURNING id, created_at;
     `;
 
     const values = [
       dados.email, dados.nomeCompleto, dados.dataNascimento, dados.naturalidade, dados.sexo, dados.endereco,
-      dados.batizado, dados.paroquiaBatismo, dados.dioceseBatismo, dados.comunhao, dados.paroquiaComunhao, dados.dioceseComunhao,
+      dados.tipoInscricao, dados.batizado, dados.paroquiaBatismo, dados.dioceseBatismo, dados.comunhao, dados.paroquiaComunhao, dados.dioceseComunhao,
       dados.telefoneWhatsApp, dados.emailContato,
       dados.nomePai, dados.estadoCivilPai, dados.naturalidadePai,
       dados.nomeMae, dados.estadoCivilMae, dados.naturalidadeMae,
@@ -667,6 +697,13 @@ app.post('/api/inscricoes-com-arquivos', upload.fields([
 
     const result = await pool.query(query, values);
     const novaInscricao = result.rows[0];
+
+    // Criar registro de status inicial
+    const statusQuery = `
+      INSERT INTO status_controle (inscricao_id, status, observacao, data_atualizacao)
+      VALUES ($1, 'Em Andamento', 'Cadastro inicial', CURRENT_TIMESTAMP)
+    `;
+    await pool.query(statusQuery, [novaInscricao.id]);
 
     console.log('✅ Inscrição criada com arquivos no banco:', {
       id: novaInscricao.id,
@@ -743,6 +780,151 @@ app.get('/api/arquivo/documento-identidade/:id', async (req, res) => {
   }
 });
 
+// Endpoint para salvar status de controle
+app.post('/api/inscricoes/:id/status', async (req, res) => {
+  try {
+    const inscricaoId = req.params.id;
+    const { status, observacao } = req.body;
+    
+    // Primeiro verificar se a inscrição existe
+    const checkInscricao = await pool.query('SELECT id FROM inscricoes_crisma WHERE id = $1', [inscricaoId]);
+    if (checkInscricao.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Inscrição não encontrada'
+      });
+    }
+
+    // Iniciar uma transação
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+
+      // Salvar novo status no histórico
+      const timestamp = new Date().toISOString();
+      
+      const query = `
+        INSERT INTO status_historico (
+          inscricao_id, 
+          status, 
+          observacao, 
+          data_atualizacao,
+          created_at
+        )
+        VALUES ($1, $2, $3, $4, $4)
+        RETURNING *;
+      `;
+      const result = await client.query(query, [inscricaoId, status, observacao, timestamp]);
+
+      await client.query('COMMIT');
+      
+      res.json({
+        success: true,
+        message: 'Status atualizado com sucesso',
+        data: result.rows[0]
+      });
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+
+  } catch (error) {
+    console.error('❌ Erro ao atualizar status:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erro ao atualizar status',
+      error: error.message
+    });
+  }
+});
+
+// Endpoint para buscar histórico de status
+app.get('/api/inscricoes/:id/status/historico', async (req, res) => {
+  try {
+    const inscricaoId = req.params.id;
+    console.log('🔍 Buscando histórico para inscrição:', inscricaoId);
+    
+    const query = `
+      SELECT 
+        id, 
+        inscricao_id, 
+        status, 
+        observacao, 
+        data_atualizacao, 
+        created_at
+      FROM status_historico 
+      WHERE inscricao_id = $1 
+      ORDER BY created_at DESC, id DESC
+    `;
+    const result = await pool.query(query, [inscricaoId]);
+    
+    console.log('📊 Registros encontrados:', result.rows.length);
+    
+    // Converter snake_case para camelCase antes de enviar
+    const historico = result.rows.map(row => {
+      const item = {
+        id: row.id,
+        inscricaoId: row.inscricao_id,
+        status: row.status,
+        observacao: row.observacao,
+        dataAtualizacao: row.data_atualizacao,
+        createdAt: row.created_at
+      };
+      console.log('🔄 Item do histórico:', item);
+      return item;
+    });
+
+    res.json(historico);
+    
+  } catch (error) {
+    console.error('❌ Erro ao buscar histórico de status:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erro ao buscar histórico de status',
+      error: error.message
+    });
+  }
+});
+
+// Endpoint para buscar status de controle
+app.get('/api/inscricoes/:id/status', async (req, res) => {
+  try {
+    const inscricaoId = req.params.id;
+    
+    const query = 'SELECT * FROM status_controle WHERE inscricao_id = $1';
+    const result = await pool.query(query, [inscricaoId]);
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Status não encontrado'
+      });
+    }
+
+    // Converter snake_case para camelCase antes de enviar
+    const row = result.rows[0];
+    const status = {
+      id: row.id,
+      inscricaoId: row.inscricao_id,
+      status: row.status,
+      observacao: row.observacao,
+      dataAtualizacao: row.data_atualizacao
+    };
+    
+    res.json(status);
+    
+  } catch (error) {
+    console.error('❌ Erro ao buscar status:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erro ao buscar status',
+      error: error.message
+    });
+  }
+});
+
 // Endpoint para baixar certidão de batismo
 app.get('/api/arquivo/certidao-batismo/:id', async (req, res) => {
   try {
@@ -772,7 +954,63 @@ app.get('/api/arquivo/certidao-batismo/:id', async (req, res) => {
 // Função para atualizar estrutura do banco
 async function atualizarEstruturaBanco() {
   try {
-    console.log('🔄 Verificando/atualizando estrutura do banco para BLOB...');
+    console.log('🔄 Verificando/atualizando estrutura do banco...');
+
+    // Verificar e adicionar coluna tipo_inscricao
+    await pool.query(`
+      DO $$ 
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = 'inscricoes_crisma' 
+          AND column_name = 'tipo_inscricao'
+        ) THEN
+          ALTER TABLE inscricoes_crisma
+          ADD COLUMN tipo_inscricao VARCHAR(20) NOT NULL DEFAULT 'crisma';
+
+          ALTER TABLE inscricoes_crisma
+          ADD CONSTRAINT inscricoes_tipo_check 
+          CHECK (tipo_inscricao IN ('catequese', 'catecumenato', 'crisma'));
+
+          CREATE INDEX IF NOT EXISTS idx_inscricoes_tipo ON inscricoes_crisma(tipo_inscricao);
+        END IF;
+      EXCEPTION
+        WHEN undefined_table THEN
+          RAISE NOTICE 'Table inscricoes_crisma does not exist yet';
+      END $$;
+    `);
+
+    // Criar tabela de status_controle e histórico se não existirem
+    await pool.query(`
+      DO $$ 
+      BEGIN
+        -- Criar a tabela de controle se não existir
+        CREATE TABLE IF NOT EXISTS status_controle (
+          id SERIAL PRIMARY KEY,
+          inscricao_id INTEGER NOT NULL REFERENCES inscricoes_crisma(id),
+          status VARCHAR(20) NOT NULL CHECK (status IN ('Em Andamento', 'Desistência', 'Concluído', '')),
+          observacao TEXT,
+          data_atualizacao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          UNIQUE(inscricao_id)
+        );
+
+        -- Criar a tabela de histórico se não existir
+        CREATE TABLE IF NOT EXISTS status_historico (
+          id SERIAL PRIMARY KEY,
+          inscricao_id INTEGER NOT NULL REFERENCES inscricoes_crisma(id),
+          status VARCHAR(20) NOT NULL CHECK (status IN ('Em Andamento', 'Desistência', 'Concluído', '')),
+          observacao TEXT,
+          data_atualizacao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        );
+
+        -- Criar índice se não existir
+        CREATE INDEX IF NOT EXISTS idx_status_inscricao ON status_controle(inscricao_id);
+      EXCEPTION
+        WHEN duplicate_table THEN
+          NULL;
+      END $$;
+    `);
 
     // Remover colunas antigas de path se existirem
     await pool.query(`

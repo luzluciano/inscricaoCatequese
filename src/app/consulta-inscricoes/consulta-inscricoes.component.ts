@@ -187,9 +187,13 @@ export class ConsultaInscricoesComponent implements OnInit {
     return 'N/A';
   }
 
-  formatarData(data: string | Date): string {
+  formatarData(data: string | Date | null | undefined): string {
     if (!data) return '';
-    return new Date(data).toLocaleDateString('pt-BR');
+    try {
+      return new Date(data).toLocaleDateString('pt-BR');
+    } catch (error) {
+      return '';
+    }
   }
 
   // Método para verificar o status da comunhão

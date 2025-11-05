@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Crismando } from '../model/crismando.model';
+import { StatusControle } from '../model/status-controle.model';
 
 @Injectable({
   providedIn: 'root'
@@ -103,5 +104,20 @@ export class InscricaoService {
   // Excluir inscrição
   excluirInscricao(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/inscricoes/${id}`);
+  }
+
+  // Atualizar status da inscrição
+  atualizarStatusInscricao(id: number, statusControle: StatusControle): Observable<any> {
+    return this.http.post(`${this.apiUrl}/inscricoes/${id}/status`, statusControle);
+  }
+
+  // Buscar status da inscrição
+  buscarStatusInscricao(id: number): Observable<StatusControle> {
+    return this.http.get<StatusControle>(`${this.apiUrl}/inscricoes/${id}/status`);
+  }
+
+  // Buscar histórico de status
+  buscarHistoricoStatus(id: number): Observable<StatusControle[]> {
+    return this.http.get<StatusControle[]>(`${this.apiUrl}/inscricoes/${id}/status/historico`);
   }
 }
