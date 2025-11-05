@@ -1,0 +1,136 @@
+<div class="sucesso-container">
+  <!-- CABEÇALHO DE SUCESSO -->
+  <div class="header-sucesso">
+    <div class="icone-sucesso">
+      <div class="circulo-check">
+        <svg class="check-icon" viewBox="0 0 24 24">
+          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+        </svg>
+      </div>
+    </div>
+    <h1>✅ Inscrição Enviada com Sucesso!</h1>
+    <p class="subtitulo">Sua inscrição para a Crisma foi registrada com sucesso</p>
+  </div>
+
+  <!-- INFORMAÇÕES DA INSCRIÇÃO -->
+  <div class="info-inscricao" *ngIf="dadosInscricao">
+    <div class="card-info">
+      <div class="titulo-info">
+        <h2>📋 Detalhes da Inscrição</h2>
+      </div>
+      
+      <div class="detalhes-grid">
+        <div class="detalhe-item">
+          <span class="label">🆔 Número da Inscrição:</span>
+          <span class="valor destaque">{{ dadosInscricao.id }}</span>
+        </div>
+        
+        <div class="detalhe-item">
+          <span class="label">👤 Nome Completo:</span>
+          <span class="valor">{{ dadosInscricao.nomeCompleto }}</span>
+        </div>
+        
+        <div class="detalhe-item">
+          <span class="label">📧 E-mail:</span>
+          <span class="valor">{{ dadosInscricao.email }}</span>
+        </div>
+        
+        <div class="detalhe-item">
+          <span class="label">📅 Data de Envio:</span>
+          <span class="valor">{{ formatarDataHora(dadosInscricao.dataEnvio) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTOS ANEXADOS -->
+    <div class="card-documentos" *ngIf="dadosInscricao.arquivos">
+      <div class="titulo-info">
+        <h3>📎 Documentos Anexados</h3>
+      </div>
+      
+      <div class="documentos-lista">
+        <div class="documento-anexado" *ngIf="dadosInscricao.arquivos.documentoIdentidade">
+          <span class="doc-icone">🆔</span>
+          <div class="doc-info">
+            <span class="doc-nome">{{ dadosInscricao.arquivos.documentoIdentidade.nome }}</span>
+            <span class="doc-tamanho">{{ formatarTamanho(dadosInscricao.arquivos.documentoIdentidade.tamanho) }}</span>
+          </div>
+          <span class="doc-status">✅ Anexado</span>
+        </div>
+        
+        <div class="documento-anexado" *ngIf="dadosInscricao.arquivos.certidaoBatismo">
+          <span class="doc-icone">✝️</span>
+          <div class="doc-info">
+            <span class="doc-nome">{{ dadosInscricao.arquivos.certidaoBatismo.nome }}</span>
+            <span class="doc-tamanho">{{ formatarTamanho(dadosInscricao.arquivos.certidaoBatismo.tamanho) }}</span>
+          </div>
+          <span class="doc-status">✅ Anexado</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRÓXIMOS PASSOS -->
+  <div class="proximos-passos">
+    <div class="card-passos">
+      <div class="titulo-info">
+        <h3>📌 Próximos Passos</h3>
+      </div>
+      
+      <div class="passos-lista">
+        <div class="passo-item">
+          <span class="passo-numero">1</span>
+          <div class="passo-content">
+            <h4>📧 Confirmação por E-mail</h4>
+            <p>Você receberá um e-mail de confirmação com os detalhes da sua inscrição.</p>
+          </div>
+        </div>
+        
+        <div class="passo-item">
+          <span class="passo-numero">2</span>
+          <div class="passo-content">
+            <h4>📞 Aguarde o Contato</h4>
+            <p>Nossa equipe entrará em contato para confirmar sua participação no curso preparatório.</p>
+          </div>
+        </div>
+        
+        <div class="passo-item">
+          <span class="passo-numero">3</span>
+          <div class="passo-content">
+            <h4>📚 Início do Curso</h4>
+            <p>Compareça no local e horário informados para o início das atividades.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AÇÕES -->
+  <div class="acoes-container">
+    <div class="acoes-buttons">
+      <button routerLink="/home" class="btn-primary">
+        🏠 Voltar ao Início
+      </button>
+      
+      <button routerLink="/consulta" class="btn-secondary">
+        📊 Ver Todas as Inscrições
+      </button>
+      
+      <button (click)="imprimirComprovante()" class="btn-outline">
+        🖨️ Imprimir Comprovante
+      </button>
+    </div>
+  </div>
+
+  <!-- INFORMAÇÕES DE CONTATO -->
+  <div class="contato-footer">
+    <div class="contato-card">
+      <h4>📞 Dúvidas ou Problemas?</h4>
+      <p>Entre em contato conosco:</p>
+      <div class="contato-info">
+        <span>📧 contato&#64;comunidadepotuvera.org.br</span>
+        <span>📱 (11) 9999-9999</span>
+      </div>
+    </div>
+  </div>
+</div>

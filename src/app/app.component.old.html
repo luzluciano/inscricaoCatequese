@@ -1,0 +1,241 @@
+<div class="app-container">
+  <!-- NAVEGAÇÃO -->
+  <nav class="main-nav">
+    <div class="nav-brand">
+      <h1>✝️ Cadastro de Crisma</h1>
+      <p>Comunidade Nossa Senhora Aparecida - Potuvera</p>
+    </div>
+    <div class="nav-links">
+      <a routerLink="/home" class="nav-link">🏠 Início</a>
+      <a routerLink="/consulta" class="nav-link">🔍 Consultar Inscrições</a>
+    </div>
+  </nav>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="main-content">
+    <!-- Formulário de Inscrição (quando na rota principal) -->
+    <div class="container" *ngIf="!isConsultaRoute()">
+      <div class="header">
+        <h1>✝️ Inscrição para Crisma</h1>
+        <p>Comunidade Nossa Senhora Aparecida - Potuvera - Preparação Sacramental</p>
+      </div>
+
+      <form [formGroup]="formulario" (ngSubmit)="onSubmit()"
+    <fieldset>
+      <legend>👤 Informações do Crismando</legend>
+      
+      <label class="required">
+        E-mail
+        <input formControlName="email" type="email" placeholder="seu@email.com" />
+      </label>
+      
+      <label class="required">
+        Nome Completo
+        <input formControlName="nomeCompleto" type="text" placeholder="Nome completo" />
+      </label>
+      
+      <label class="required">
+        Data de Nascimento
+        <input formControlName="dataNascimento" type="date" />
+      </label>
+      
+      <label class="required">
+        Naturalidade
+        <input formControlName="naturalidade" type="text" placeholder="Cidade, Estado" />
+      </label>
+      
+      <label class="required">Sexo</label>
+      <div class="radio-group">
+        <label><input type="radio" formControlName="sexo" value="Masculino" /> Masculino</label>
+        <label><input type="radio" formControlName="sexo" value="Feminino" /> Feminino</label>
+      </div>
+      
+      <label class="required">
+        Endereço Completo
+        <input formControlName="endereco" type="text" placeholder="Endereço com CEP" />
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>✝️ Informações Sacramentais</legend>
+      
+      <div class="checkbox-group">
+        <label><input type="checkbox" formControlName="batizado" /> Batizado na Igreja Católica</label>
+      </div>
+      
+      <label>
+        Paróquia de Batismo
+        <input formControlName="paroquiaBatismo" type="text" />
+      </label>
+      
+      <label>
+        Diocese de Batismo
+        <input formControlName="dioceseBatismo" type="text" />
+      </label>
+      
+      <label>Comunhão</label>
+      <div class="radio-group">
+        <label><input type="radio" formControlName="comunhao" value="Sim" /> Sim</label>
+        <label><input type="radio" formControlName="comunhao" value="Não" /> Não</label>
+      </div>
+      
+      <label>
+        Paróquia da Comunhão
+        <input formControlName="paroquiaComunhao" type="text" />
+      </label>
+      
+      <label>
+        Diocese da Comunhão
+        <input formControlName="dioceseComunhao" type="text" />
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>📞 Contato</legend>
+      
+      <label class="required">
+        Telefone WhatsApp
+        <input formControlName="telefoneWhatsApp" type="text" placeholder="(11) 99999-9999" />
+      </label>
+      
+      <label class="required">
+        E-mail de Contato
+        <input formControlName="emailContato" type="email" />
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>👪 Dados dos Pais</legend>
+      
+      <label>
+        Nome do Pai
+        <input formControlName="nomePai" type="text" />
+      </label>
+      
+      <label>Estado Civil do Pai</label>
+      <div class="radio-group">
+        <label><input type="radio" formControlName="estadoCivilPai" value="Solteiro" /> Solteiro</label>
+        <label><input type="radio" formControlName="estadoCivilPai" value="Casado" /> Casado</label>
+        <label><input type="radio" formControlName="estadoCivilPai" value="Divorciado" /> Divorciado</label>
+        <label><input type="radio" formControlName="estadoCivilPai" value="Outros" /> Outros</label>
+      </div>
+      
+      <label>
+        Naturalidade do Pai
+        <input formControlName="naturalidadePai" type="text" />
+      </label>
+
+      <label>
+        Nome da Mãe
+        <input formControlName="nomeMae" type="text" />
+      </label>
+      
+      <label>Estado Civil da Mãe</label>
+      <div class="radio-group">
+        <label><input type="radio" formControlName="estadoCivilMae" value="Solteiro" /> Solteiro</label>
+        <label><input type="radio" formControlName="estadoCivilMae" value="Casado" /> Casado</label>
+        <label><input type="radio" formControlName="estadoCivilMae" value="Divorciado" /> Divorciado</label>
+        <label><input type="radio" formControlName="estadoCivilMae" value="Outros" /> Outros</label>
+      </div>
+      
+      <label>
+        Naturalidade da Mãe
+        <input formControlName="naturalidadeMae" type="text" />
+      </label>
+
+      <label>Pais Casados na Igreja?</label>
+      <div class="radio-group">
+        <label><input type="radio" formControlName="paisCasadosIgreja" value="true" /> Sim</label>
+        <label><input type="radio" formControlName="paisCasadosIgreja" value="false" /> Não</label>
+      </div>
+      
+      <label>
+        Paróquia do Casamento
+        <input formControlName="paroquiaCasamentoPais" type="text" />
+      </label>
+      
+      <label>
+        Diocese do Casamento
+        <input formControlName="dioceseCasamentoPais" type="text" />
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>🙏 Padrinho/Madrinha</legend>
+      
+      <label>
+        Nome do Padrinho/Madrinha
+        <input formControlName="nomePadrinhoMadrinha" type="text" />
+      </label>
+      
+      <div class="checkbox-group">
+        <label><input type="checkbox" formControlName="padrinhoCrismado" /> É crismado na Igreja Católica</label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>📚 Curso Preparatório</legend>
+      
+      <label class="required">
+        Data de Início
+        <input formControlName="dataInicioCurso" type="date" />
+      </label>
+      
+      <label class="required">
+        Comunidade do Curso
+        <input formControlName="comunidadeCurso" type="text" />
+      </label>
+      
+      <label class="required">
+        Nome do Catequista
+        <input formControlName="nomeCatequista" type="text" />
+      </label>
+      
+      <label class="required">
+        Horário do Curso
+        <input formControlName="horarioCurso" type="text" placeholder="Ex: Sábados às 14h" />
+      </label>
+    </fieldset>
+
+    <div *ngIf="formulario.invalid" class="alert alert-error">
+      <h4>⚠️ Campos obrigatórios faltando:</h4>
+      <ul>
+        <li *ngIf="formulario.get('email')?.invalid">E-mail</li>
+        <li *ngIf="formulario.get('nomeCompleto')?.invalid">Nome Completo</li>
+        <li *ngIf="formulario.get('dataNascimento')?.invalid">Data de Nascimento</li>
+        <li *ngIf="formulario.get('naturalidade')?.invalid">Naturalidade</li>
+        <li *ngIf="formulario.get('sexo')?.invalid">Sexo</li>
+        <li *ngIf="formulario.get('endereco')?.invalid">Endereço</li>
+        <li *ngIf="formulario.get('telefoneWhatsApp')?.invalid">Telefone</li>
+        <li *ngIf="formulario.get('emailContato')?.invalid">E-mail de Contato</li>
+        <li *ngIf="formulario.get('dataInicioCurso')?.invalid">Data de Início</li>
+        <li *ngIf="formulario.get('comunidadeCurso')?.invalid">Comunidade</li>
+        <li *ngIf="formulario.get('nomeCatequista')?.invalid">Catequista</li>
+        <li *ngIf="formulario.get('horarioCurso')?.invalid">Horário</li>
+      </ul>
+    </div>
+    
+    <div *ngIf="formulario.valid" class="alert alert-success">
+      <strong>✅ Formulário válido!</strong> Pode enviar a inscrição.
+    </div>
+
+    <div class="buttons-container">
+      <button type="submit" [disabled]="formulario.invalid" class="btn-primary">
+        ✝️ Enviar Inscrição
+      </button>
+      
+      <button type="button" (click)="testarConexao()" class="btn-secondary">
+        🔌 Testar BD
+      </button>
+      
+      <button type="button" (click)="checkFormStatus()" class="btn-info">
+        📊 Status
+      </button>
+      
+      <button type="button" (click)="corrigirComunhao()" class="btn-warning">
+        🔧 Corrigir BD
+      </button>
+    </div>
+
+  </form>
+</div>

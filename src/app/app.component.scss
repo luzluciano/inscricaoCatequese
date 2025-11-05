@@ -1,0 +1,376 @@
+/* === ESTILOS GERAIS === */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  border-radius: 15px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* === CABEÇALHO === */
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px 0;
+  border-bottom: 3px solid #667eea;
+}
+
+.header h1 {
+  color: #333;
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 300;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.header p {
+  color: #666;
+  margin: 10px 0 0 0;
+  font-size: 1.1rem;
+}
+
+/* === FORMULÁRIO === */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* === FIELDSETS === */
+fieldset {
+  border: 2px solid #e1e8ed;
+  border-radius: 12px;
+  padding: 25px;
+  margin: 0;
+  background: linear-gradient(145deg, #f8f9fa, #ffffff);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+}
+
+fieldset:hover {
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.1);
+}
+
+legend {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #333;
+  padding: 0 15px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* === LABELS E INPUTS === */
+label {
+  display: block;
+  margin-bottom: 15px;
+  font-weight: 500;
+  color: #444;
+  font-size: 1rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"],
+textarea,
+select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+  margin-top: 5px;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  transform: translateY(-1px);
+}
+
+/* === RADIO BUTTONS E CHECKBOXES === */
+input[type="radio"],
+input[type="checkbox"] {
+  margin-right: 8px;
+  transform: scale(1.2);
+  accent-color: #667eea;
+}
+
+.radio-group,
+.checkbox-group {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.radio-group label,
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.radio-group label:hover,
+.checkbox-group label:hover {
+  background-color: #f0f4ff;
+}
+
+/* === INDICADOR DE PROGRESSO === */
+.progress-container {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  color: white;
+}
+
+.progress-container h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+}
+
+.progress-bar-container {
+  background: rgba(255,255,255,0.2);
+  height: 25px;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  border-radius: 15px;
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* === ALERTAS E STATUS === */
+.alert {
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin: 15px 0;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.alert-error {
+  background: #fee;
+  border: 1px solid #fcc;
+  color: #d63384;
+}
+
+.alert-success {
+  background: #d1edff;
+  border: 1px solid #0ea5e9;
+  color: #0369a1;
+}
+
+.alert h4 {
+  margin: 0 0 10px 0;
+  font-size: 1.1rem;
+}
+
+.alert ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+/* === BOTÕES === */
+.buttons-container {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 30px;
+  padding: 20px 0;
+}
+
+button {
+  padding: 15px 25px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 160px;
+  position: relative;
+  overflow: hidden;
+}
+
+button:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+button:hover:before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:disabled {
+  background: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #74b9ff, #0984e3);
+  color: white;
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, #fdcb6e, #e17055);
+  color: white;
+}
+
+.btn-info {
+  background: linear-gradient(135deg, #81ecec, #74b9ff);
+  color: white;
+}
+
+/* === CAMPOS OBRIGATÓRIOS === */
+label.required:after {
+  content: ' *';
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+/* === RESPONSIVIDADE === */
+@media (max-width: 768px) {
+  .container {
+    margin: 10px;
+    padding: 15px;
+    border-radius: 10px;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+  
+  .buttons-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  button {
+    min-width: auto;
+  }
+  
+  .radio-group,
+  .checkbox-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 1.8rem;
+  }
+  
+  fieldset {
+    padding: 15px;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="date"] {
+    padding: 10px 12px;
+  }
+}
+
+/* === ANIMAÇÕES === */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.container {
+  animation: fadeInUp 0.6s ease;
+}
+
+fieldset {
+  animation: fadeInUp 0.6s ease;
+}
+
+/* === UPLOAD DE ARQUIVOS === */
+input[type="file"] {
+  padding: 8px;
+  border: 2px dashed #667eea;
+  background: #f8f9ff;
+  border-radius: 6px;
+}
+
+input[type="file"]:hover {
+  border-color: #764ba2;
+  background: #f0f4ff;
+}

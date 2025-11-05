@@ -1,0 +1,350 @@
+/* ==============================================
+   ESTILOS GLOBAIS DO COMPONENTE HOME
+   ============================================== */
+
+.home-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  overflow-x: hidden;
+}
+
+/* ==============================================
+   SEÇÃO HERO (CABEÇALHO PRINCIPAL)
+   ============================================== */
+
+.hero-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 4rem 2rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="cross" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M10 2v16M2 10h16" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23cross)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}
+
+.logo-section {
+  .cross-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    display: block;
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    
+    @media (max-width: 768px) {
+      font-size: 2.5rem;
+    }
+  }
+
+  .subtitle {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+  }
+
+  .description {
+    font-size: 1.1rem;
+    opacity: 0.8;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+  to { text-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 30px rgba(255,255,255,0.6); }
+}
+
+/* ==============================================
+   SEÇÃO MENU PRINCIPAL
+   ============================================== */
+
+.menu-section {
+  background: white;
+  padding: 4rem 2rem;
+  text-align: center;
+
+  h2 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 3rem;
+    font-weight: 600;
+    
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
+  }
+}
+
+.menu-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.menu-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(102,126,234,0.1), transparent);
+    transition: left 0.5s;
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(102,126,234,0.2);
+    border-color: #667eea;
+
+    &::before {
+      left: 100%;
+    }
+
+    .card-icon {
+      transform: scale(1.1);
+    }
+
+    .action-arrow {
+      transform: translateX(5px);
+    }
+  }
+
+  .card-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  h3 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  p {
+    color: #666;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.card-features {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+  text-align: left;
+
+  li {
+    color: #555;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+    position: relative;
+
+    &:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
+      width: 4px;
+      height: 4px;
+      background: #667eea;
+      border-radius: 50%;
+    }
+  }
+}
+
+.card-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #f0f0f0;
+
+  .action-text {
+    font-weight: 600;
+    color: #667eea;
+    font-size: 1.1rem;
+  }
+
+  .action-arrow {
+    font-size: 1.5rem;
+    color: #667eea;
+    transition: transform 0.3s ease;
+  }
+}
+
+/* ==============================================
+   SEÇÃO INFORMAÇÕES ADICIONAIS
+   ============================================== */
+
+.info-section {
+  background: #f8f9fa;
+  padding: 4rem 2rem;
+}
+
+.info-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.info-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+  }
+
+  .info-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  h4 {
+    font-size: 1.3rem;
+    color: #333;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+  }
+
+  p {
+    color: #666;
+    line-height: 1.5;
+    font-size: 0.95rem;
+  }
+}
+
+/* ==============================================
+   SEÇÃO RODAPÉ
+   ============================================== */
+
+.footer-section {
+  background: #2c3e50;
+  color: white;
+  padding: 3rem 2rem;
+  text-align: center;
+
+  .footer-content {
+    max-width: 600px;
+    margin: 0 auto;
+
+    p {
+      margin-bottom: 0.8rem;
+      line-height: 1.6;
+
+      &:first-child {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+
+    span {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+  }
+}
+
+/* ==============================================
+   RESPONSIVIDADE ADICIONAL
+   ============================================== */
+
+@media (max-width: 480px) {
+  .home-container {
+    .hero-section {
+      padding: 2rem 1rem;
+    }
+
+    .menu-section {
+      padding: 2rem 1rem;
+    }
+
+    .menu-cards {
+      grid-template-columns: 1fr;
+    }
+
+    .menu-card {
+      padding: 2rem;
+    }
+
+    .info-section {
+      padding: 2rem 1rem;
+    }
+
+    .footer-section {
+      padding: 2rem 1rem;
+
+      .footer-links {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+  }
+}

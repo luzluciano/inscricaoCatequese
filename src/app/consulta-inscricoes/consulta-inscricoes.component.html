@@ -1,0 +1,315 @@
+<div class="consulta-container">
+  <!-- CABEÇALHO -->
+  <div class="header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1>🔍 Consulta de Inscrições - Crisma</h1>
+        <p>Comunidade Nossa Senhora Aparecida - Potuvera</p>
+      </div>
+      <div class="header-actions">
+        <button routerLink="/home" class="btn-home" title="Voltar ao Início">
+          🏠 Home
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORMULÁRIO DE FILTROS -->
+  <div class="filtros-section">
+    <h2>📋 Filtros de Pesquisa</h2>
+    
+    <form [formGroup]="consultaForm" (ngSubmit)="consultarInscricoes()">
+      <div class="filtros-grid">
+        <div class="filtro-group">
+          <label for="email">E-mail</label>
+          <input 
+            formControlName="email" 
+            type="email" 
+            id="email"
+            placeholder="Digite o e-mail do crismando"
+          />
+        </div>
+
+        <div class="filtro-group">
+          <label for="nomeCompleto">Nome Completo</label>
+          <input 
+            formControlName="nomeCompleto" 
+            type="text" 
+            id="nomeCompleto"
+            placeholder="Digite parte do nome"
+          />
+        </div>
+
+        <div class="filtro-group">
+          <label for="comunidadeCurso">Comunidade do Curso</label>
+          <input 
+            formControlName="comunidadeCurso" 
+            type="text" 
+            id="comunidadeCurso"
+            placeholder="Nome da comunidade"
+          />
+        </div>
+
+        <div class="filtro-group">
+          <label for="sexo">Sexo</label>
+          <select formControlName="sexo" id="sexo">
+            <option value="">Todos</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Feminino">Feminino</option>
+          </select>
+        </div>
+
+        <div class="filtro-group">
+          <label for="dataInicio">Data Início (a partir de)</label>
+          <input 
+            formControlName="dataInicio" 
+            type="date" 
+            id="dataInicio"
+          />
+        </div>
+
+        <div class="filtro-group">
+          <label for="dataFim">Data Fim (até)</label>
+          <input 
+            formControlName="dataFim" 
+            type="date" 
+            id="dataFim"
+          />
+        </div>
+
+        <div class="filtro-group">
+          <label for="batizado">Batizado</label>
+          <select formControlName="batizado" id="batizado">
+            <option value="">Todos</option>
+            <option value="true">Sim</option>
+            <option value="false">Não</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="filtros-actions">
+        <button type="submit" class="btn-primary" [disabled]="loading">
+          🔍 Pesquisar
+        </button>
+        
+        <button type="button" class="btn-secondary" (click)="limparFiltros()" [disabled]="loading">
+          🗑️ Limpar Filtros
+        </button>
+        
+        <button type="button" class="btn-success" (click)="exportarCSV()" [disabled]="loading || inscricoes.length === 0">
+          📊 Exportar CSV
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- INDICADORES -->
+  <div class="indicadores" *ngIf="!loading">
+    <div class="indicador">
+      <span class="numero">{{ inscricoes.length }}</span>
+      <span class="label">{{ filtroAplicado ? 'Resultado(s) Encontrado(s)' : 'Total de Inscrições' }}</span>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-section" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Carregando inscrições...</p>
+  </div>
+
+  <!-- ERRO -->
+  <div class="alert alert-error" *ngIf="erro">
+    <h4>❌ Erro</h4>
+    <p>{{ erro }}</p>
+    <button (click)="carregarTodasInscricoes()" class="btn-retry">
+      🔄 Tentar Novamente
+    </button>
+  </div>
+
+  <!-- TABELA DE RESULTADOS -->
+  <div class="resultados-section" *ngIf="!loading && !erro && inscricoes.length > 0">
+    <h2>📊 Resultados da Consulta</h2>
+    
+    <div class="table-container">
+      <table class="inscricoes-table">
+        <thead>
+          <tr>
+            <th class="nome-column">Nome Completo</th>
+            <th class="email-column">E-mail</th>
+            <th class="data-column">Data Nascimento</th>
+            <th class="cidade-column">Naturalidade</th>
+            <th class="status-column">Sexo</th>
+            <th class="endereco-column">Endereço</th>
+            <th class="telefone-column">Telefone WhatsApp</th>
+            <th class="email-column">E-mail Contato</th>
+            <th class="status-column">Batizado</th>
+            <th class="comunidade-column">Paróquia Batismo</th>
+            <th class="cidade-column">Diocese Batismo</th>
+            <th class="status-column">Comunhão</th>
+            <th class="comunidade-column">Paróquia Comunhão</th>
+            <th class="cidade-column">Diocese Comunhão</th>
+            <th class="nome-column">Nome Pai</th>
+            <th class="status-column">Estado Civil Pai</th>
+            <th class="cidade-column">Naturalidade Pai</th>
+            <th class="nome-column">Nome Mãe</th>
+            <th class="status-column">Estado Civil Mãe</th>
+            <th class="cidade-column">Naturalidade Mãe</th>
+            <th class="status-column">Pais Casados Igreja</th>
+            <th class="comunidade-column">Paróquia Casamento</th>
+            <th class="cidade-column">Diocese Casamento</th>
+            <th class="nome-column">Padrinho/Madrinha</th>
+            <th class="status-column">Padrinho Crismado</th>
+            <th class="data-column">Data Início Curso</th>
+            <th class="comunidade-column">Comunidade Curso</th>
+            <th class="catequista-column">Catequista</th>
+            <th class="curso-column">Horário Curso</th>
+            <th class="documentos-column">Documentos</th>
+            <th class="acoes-column">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let inscricao of inscricoes; let i = index" [class.even]="i % 2 === 0">
+            <td class="nome-column">
+              <span class="nome-principal">{{ inscricao.nomeCompleto }}</span>
+            </td>
+            <td class="email-column">
+              <span class="email-text">{{ inscricao.email }}</span>
+            </td>
+            <td class="data-column">
+              <span class="data-formatada">{{ formatarData(inscricao.dataNascimento) }}</span>
+            </td>
+            <td class="cidade-column">{{ inscricao.naturalidade || 'N/A' }}</td>
+            <td class="status-column">
+              <span class="badge" [class.badge-masculino]="inscricao.sexo === 'Masculino'" 
+                    [class.badge-feminino]="inscricao.sexo === 'Feminino'">
+                {{ inscricao.sexo }}
+              </span>
+            </td>
+            <td class="endereco-column" title="{{ inscricao.endereco }}">
+              {{ inscricao.endereco ? (inscricao.endereco.length > 30 ? inscricao.endereco.substring(0, 30) + '...' : inscricao.endereco) : 'N/A' }}
+            </td>
+            <td class="telefone-column">{{ inscricao.telefoneWhatsApp || 'N/A' }}</td>
+            <td class="email-column">
+              <span class="email-text">{{ inscricao.emailContato || 'N/A' }}</span>
+            </td>
+            <td class="status-column">
+              <span class="status-badge" [class.sim]="inscricao.batizado" 
+                    [class.nao]="!inscricao.batizado">
+                {{ inscricao.batizado ? 'Sim' : 'Não' }}
+              </span>
+            </td>
+            <td class="comunidade-column">{{ inscricao.paroquiaBatismo || 'N/A' }}</td>
+            <td class="cidade-column">{{ inscricao.dioceseBatismo || 'N/A' }}</td>
+            <td class="status-column">
+              <span class="status-badge" [class.sim]="isComunhaoSim(inscricao.comunhao)" 
+                    [class.nao]="isComunhaoNao(inscricao.comunhao)">
+                {{ getComunhaoStatus(inscricao.comunhao) === 'Sim' ? 'Sim' : (getComunhaoStatus(inscricao.comunhao) === 'Não' ? 'Não' : 'N/I') }}
+              </span>
+            </td>
+            <td class="comunidade-column">{{ inscricao.paroquiaComunhao || 'N/A' }}</td>
+            <td class="cidade-column">{{ inscricao.dioceseComunhao || 'N/A' }}</td>
+            <td class="nome-column">{{ inscricao.nomePai || 'N/A' }}</td>
+            <td class="status-column">{{ inscricao.estadoCivilPai || 'N/A' }}</td>
+            <td class="cidade-column">{{ inscricao.naturalidadePai || 'N/A' }}</td>
+            <td class="nome-column">{{ inscricao.nomeMae || 'N/A' }}</td>
+            <td class="status-column">{{ inscricao.estadoCivilMae || 'N/A' }}</td>
+            <td class="cidade-column">{{ inscricao.naturalidadeMae || 'N/A' }}</td>
+            <td class="status-column">
+              <span class="status-badge" [class.sim]="inscricao.paisCasadosIgreja === true" 
+                    [class.nao]="inscricao.paisCasadosIgreja === false">
+                {{ inscricao.paisCasadosIgreja === true ? 'Sim' : (inscricao.paisCasadosIgreja === false ? 'Não' : 'N/I') }}
+              </span>
+            </td>
+            <td class="comunidade-column">{{ inscricao.paroquiaCasamentoPais || 'N/A' }}</td>
+            <td class="cidade-column">{{ inscricao.dioceseCasamentoPais || 'N/A' }}</td>
+            <td class="nome-column">{{ inscricao.nomePadrinhoMadrinha || 'N/A' }}</td>
+            <td class="status-column">
+              <span class="status-badge" [class.sim]="inscricao.padrinhoCrismado" 
+                    [class.nao]="!inscricao.padrinhoCrismado">
+                {{ inscricao.padrinhoCrismado ? 'Sim' : 'Não' }}
+              </span>
+            </td>
+            <td class="data-column">
+              <span class="data-formatada">{{ formatarData(inscricao.dataInicioCurso) }}</span>
+            </td>
+            <td class="comunidade-column">{{ inscricao.comunidadeCurso || 'N/A' }}</td>
+            <td class="catequista-column">{{ inscricao.nomeCatequista || 'N/A' }}</td>
+            <td class="curso-column">{{ inscricao.horarioCurso || 'N/A' }}</td>
+            <td class="documentos-column">
+              <div class="documentos-container">
+                <!-- Documento de Identidade -->
+                <div class="documento-item" *ngIf="inscricao.documentoIdentidadeNome">
+                  <div class="documento-info">
+                    <span class="documento-tipo">🆔 RG/CPF</span>
+                    <span class="documento-nome">{{ inscricao.documentoIdentidadeNome }}</span>
+                    <span class="documento-tamanho">{{ formatarTamanho(inscricao.documentoIdentidadeTamanho || 0) }}</span>
+                  </div>
+                  <button class="btn-download" 
+                          (click)="baixarDocumento('documento-identidade', inscricao.id!, inscricao.documentoIdentidadeNome!)"
+                          [title]="'Baixar: ' + inscricao.documentoIdentidadeNome">
+                    📥 Download
+                  </button>
+                </div>
+
+                <!-- Certidão de Batismo -->
+                <div class="documento-item" *ngIf="inscricao.certidaoBatismoNome">
+                  <div class="documento-info">
+                    <span class="documento-tipo">✝️ Batismo</span>
+                    <span class="documento-nome">{{ inscricao.certidaoBatismoNome }}</span>
+                    <span class="documento-tamanho">{{ formatarTamanho(inscricao.certidaoBatismoTamanho || 0) }}</span>
+                  </div>
+                  <button class="btn-download" 
+                          (click)="baixarDocumento('certidao-batismo', inscricao.id!, inscricao.certidaoBatismoNome!)"
+                          [title]="'Baixar: ' + inscricao.certidaoBatismoNome">
+                    📥 Download
+                  </button>
+                </div>
+
+                <!-- Sem documentos -->
+                <div class="sem-documentos" *ngIf="!inscricao.documentoIdentidadeNome && !inscricao.certidaoBatismoNome">
+                  <span class="texto-sem-docs">📄 Nenhum documento anexado</span>
+                </div>
+              </div>
+            </td>
+            <td class="acoes-column acoes-cell">
+              <div class="acoes-buttons">
+                <button class="btn-small btn-info" title="Ver Detalhes" (click)="verDetalhes(inscricao)">
+                  👁️
+                </button>
+                <button class="btn-small btn-warning" title="Editar" (click)="editarInscricao(inscricao)">
+                  ✏️
+                </button>
+                <button class="btn-small btn-danger" title="Excluir" (click)="excluirInscricao(inscricao)">
+                  🗑️
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SEM RESULTADOS -->
+  <div class="sem-resultados" *ngIf="!loading && !erro && inscricoes.length === 0 && filtroAplicado">
+    <div class="sem-resultados-content">
+      <h3>🔍 Nenhum resultado encontrado</h3>
+      <p>Não foram encontradas inscrições com os filtros aplicados.</p>
+      <button (click)="limparFiltros()" class="btn-primary">
+        Ver Todas as Inscrições
+      </button>
+    </div>
+  </div>
+
+  <!-- PRIMEIRA VEZ SEM DADOS -->
+  <div class="sem-dados" *ngIf="!loading && !erro && inscricoes.length === 0 && !filtroAplicado">
+    <div class="sem-dados-content">
+      <h3>📋 Nenhuma inscrição cadastrada</h3>
+      <p>Ainda não há inscrições no sistema.</p>
+      <button (click)="carregarTodasInscricoes()" class="btn-secondary">
+        🔄 Recarregar
+      </button>
+    </div>
+  </div>
+
+</div>

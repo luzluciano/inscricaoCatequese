@@ -1,0 +1,351 @@
+.sucesso-container {
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .sucesso-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+    max-width: 800px;
+    width: 100%;
+    animation: slideUp 0.6s ease-out;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.icone-sucesso {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  .checkmark {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #28a745;
+    color: white;
+    font-size: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    animation: pulse 2s infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.titulo-sucesso {
+  color: #28a745;
+  font-size: 2.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.subtitulo-sucesso {
+  color: #666;
+  font-size: 1.1rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.secao {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border-left: 4px solid #667eea;
+
+  .titulo-secao {
+    color: #333;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+
+    .icone {
+      margin-right: 0.5rem;
+      font-size: 1.5rem;
+    }
+  }
+
+  .dados-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+
+    .dados-item {
+      .label {
+        font-weight: 600;
+        color: #555;
+        font-size: 0.9rem;
+        margin-bottom: 0.3rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .valor {
+        color: #333;
+        font-size: 1.1rem;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e9ecef;
+      }
+    }
+  }
+}
+
+.documento-card {
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #667eea;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+  }
+
+  .documento-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .documento-detalhes {
+      display: flex;
+      align-items: center;
+
+      .icone-documento {
+        font-size: 2rem;
+        margin-right: 1rem;
+      }
+
+      .documento-meta {
+        .nome {
+          font-weight: 600;
+          color: #333;
+          margin-bottom: 0.3rem;
+        }
+
+        .tamanho {
+          color: #666;
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    .status-documento {
+      display: flex;
+      align-items: center;
+      color: #28a745;
+      font-weight: 600;
+
+      .icone-check {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}
+
+.proximos-passos {
+  .passos-lista {
+    list-style: none;
+    padding: 0;
+
+    .passo-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #e9ecef;
+
+      .numero-passo {
+        background: #667eea;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 1rem;
+        flex-shrink: 0;
+      }
+
+      .texto-passo {
+        color: #333;
+        line-height: 1.5;
+      }
+    }
+  }
+}
+
+.acoes {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+
+  .btn {
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &.btn-primary {
+      background: #667eea;
+      color: white;
+
+      &:hover {
+        background: #5a67d8;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+    }
+
+    &.btn-outline {
+      background: transparent;
+      color: #667eea;
+      border: 2px solid #667eea;
+
+      &:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+      }
+    }
+
+    &.btn-success {
+      background: #28a745;
+      color: white;
+
+      &:hover {
+        background: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+      }
+    }
+  }
+}
+
+.contato-info {
+  text-align: center;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+
+  .titulo-contato {
+    color: #333;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .contato-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    color: #555;
+
+    .icone {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .sucesso-container {
+    padding: 1rem;
+
+    .sucesso-card {
+      padding: 1.5rem;
+    }
+  }
+
+  .titulo-sucesso {
+    font-size: 1.8rem;
+  }
+
+  .subtitulo-sucesso {
+    font-size: 1rem;
+  }
+
+  .dados-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .acoes {
+    flex-direction: column;
+    align-items: stretch;
+
+    .btn {
+      justify-content: center;
+    }
+  }
+
+  .documento-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .sucesso-container {
+    padding: 0.5rem;
+
+    .sucesso-card {
+      padding: 1rem;
+      border-radius: 15px;
+    }
+  }
+
+  .titulo-sucesso {
+    font-size: 1.5rem;
+  }
+
+  .checkmark {
+    width: 60px !important;
+    height: 60px !important;
+    font-size: 2rem !important;
+  }
+}
