@@ -7,19 +7,18 @@ const path = require('path');
 const fs = require('fs-extra');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Configuração do banco PostgreSQL
 const dbConfig = {
-  host: 'localhost',
-  port: 5432,
-  database: 'crisma_db',
-  user: 'admin',
-  password: 'admin', // Altere para sua senha do PostgreSQL
-  ssl: false,
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  connectionString: process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_OdXFbUf5wN2x@ep-shy-hall-acxylv7b-pooler.sa-east-1.aws.neon.tech/neondb',
+  ssl: {
+    require: true,
+    rejectUnauthorized: true
+  },
+  max: parseInt(process.env.DB_MAX_CONNECTIONS) || 20,
+  idleTimeoutMillis: parseInt(process.env.DB_IDLE_TIMEOUT) || 30000,
+  connectionTimeoutMillis: parseInt(process.env.DB_CONNECTION_TIMEOUT) || 2000,
 };
 
 const pool = new Pool(dbConfig);

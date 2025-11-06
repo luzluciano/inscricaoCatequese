@@ -1,0 +1,16 @@
+# Arquivos e diretórios a serem ignorados pelo Docker
+node_modules/
+npm-debug.log
+.git
+.gitignore
+.env
+*.md
+.angular/
+coverage/
+e2e/
+.editorconfig
+.browserslistrc
+karma.conf.js
+tsconfig*.json
+uploads/*
+!uploads/.gitkeep
