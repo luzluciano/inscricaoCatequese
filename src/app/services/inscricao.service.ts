@@ -8,7 +8,7 @@ import { StatusControle } from '../model/status-controle.model';
   providedIn: 'root'
 })
 export class InscricaoService {
-  private apiUrl = 'http://localhost:3000/api'; // URL do backend
+  private apiUrl = 'https://projeto-cadastro-mla9.vercel.app/api'; // URL do backend
 
   constructor(private http: HttpClient) { }
 

@@ -140,7 +140,7 @@ export class InscricaoFormComponent implements OnInit {
   }
 
   testarConexao() {
-    this.http.get('http://localhost:3000/api/test').subscribe({
+    this.http.get('https://projeto-cadastro-mla9.vercel.app/api/test').subscribe({
       next: (response) => {
         console.log('✅ Conexão OK:', response);
         alert('✅ Conexão com o backend funcionando!');
@@ -163,7 +163,7 @@ export class InscricaoFormComponent implements OnInit {
   }
 
   corrigirComunhao() {
-    this.http.post('http://localhost:3000/api/fix-comunhao', {}).subscribe({
+    this.http.post('https://projeto-cadastro-mla9.vercel.app/api/fix-comunhao', {}).subscribe({
       next: (response) => {
         console.log('✅ Correção aplicada:', response);
         alert('✅ Correção da base de dados aplicada!');

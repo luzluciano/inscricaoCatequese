@@ -295,7 +295,7 @@ export class ConsultaInscricoesComponent implements OnInit {
   // ====== MÉTODOS PARA DOCUMENTOS ======
 
   baixarDocumento(tipo: string, inscricaoId: number, nomeArquivo: string) {
-    const url = `http://localhost:3000/api/arquivo/${tipo}/${inscricaoId}`;
+    const url = `https://projeto-cadastro-mla9.vercel.app/api/arquivo/${tipo}/${inscricaoId}`;
     
     // Criar um link temporário para forçar o download
     const link = document.createElement('a');
