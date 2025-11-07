@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule, ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ViewEncapsulation, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { InscricaoService } from '../services/inscricao.service';
 import { Crismando } from '../model/crismando.model';
 import { StatusControle } from '../model/status-controle.model';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-admin-status',
@@ -28,16 +29,41 @@ export class AdminStatusComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private inscricaoService: InscricaoService
+    private router: Router,
+    private inscricaoService: InscricaoService,
+    private authService: AuthService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      const id = params['id'];
-      if (id) {
-        this.carregarInscricao(id);
-      }
-    });
+    // Verificar permissões primeiro
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    // Verificar se tem permissão para consultar inscrições OU é admin
+    const hasPermission = this.authService.hasPermission('inscricoes.consultar') || 
+                         this.authService.hasPermission('admin') || 
+                         this.authService.belongsToGroup('admin');
+
+console.log('User has permission to access admin-status:', hasPermission);  
+
+   if (!hasPermission) {
+      this.error = 'Você não tem permissão para acessar esta funcionalidade.';
+      this.loading = false;
+      return;
+    }
+
+    // Só processar parâmetros se estivermos no browser
+    if (isPlatformBrowser(this.platformId)) {
+      this.route.params.subscribe(params => {
+        const id = params['id'];
+        if (id) {
+          this.carregarInscricao(id);
+        }
+      });
+    }
   }
 
   carregarInscricao(id: number) {

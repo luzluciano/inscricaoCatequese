@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Catequese - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .login-header p {
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .navigation {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: none;
+        }
+
+        .navigation.show {
+            display: block;
+        }
+
+        .nav-menu {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 16px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            transition: background 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #f8f9fa;
+        }
+
+        #userInfo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .protected-content {
+            display: none;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .protected-content.show {
+            display: block;
+        }
+
+        .permission-demo {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .demo-section {
+            margin-bottom: 24px;
+        }
+
+        .demo-section h3 {
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .demo-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .demo-buttons .btn {
+            width: auto;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navegação (aparece após login) -->
+    <div class="navigation" id="navigation">
+        <div class="nav-menu">
+            <div id="userInfo"></div>
+            
+            <a href="#" class="nav-item" data-permission="sistema.configurar" id="adminPanelBtn">
+                🔧 Painel Admin
+            </a>
+            <a href="#" class="nav-item" data-permission="usuarios.listar" id="usersBtn">
+                👥 Usuários
+            </a>
+            <a href="#" class="nav-item" data-permission="inscricoes.criar" id="inscricaoBtn">
+                📝 Nova Inscrição
+            </a>
+            <a href="#" class="nav-item" data-permission="inscricoes.consultar" id="consultaBtn">
+                🔍 Consultar Inscrições
+            </a>
+            <a href="#" class="nav-item" data-permission="relatorios.gerar" id="reportsBtn">
+                📊 Relatórios
+            </a>
+        </div>
+    </div>
+
+    <!-- Formulário de Login -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-header">
+            <h2>Sistema de Catequese</h2>
+            <p>Faça login para continuar</p>
+        </div>
+
+        <div id="loginError" class="alert"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="usuario">Usuário:</label>
+                <input 
+                    type="text" 
+                    id="usuario" 
+                    name="usuario" 
+                    class="form-control" 
+                    placeholder="Digite seu usuário"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="senha">Senha:</label>
+                <input 
+                    type="password" 
+                    id="senha" 
+                    name="senha" 
+                    class="form-control" 
+                    placeholder="Digite sua senha"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="btn">Entrar</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <p style="color: #666; font-size: 14px;">
+                Para demonstração, use:<br>
+                <strong>Usuário:</strong> admin | <strong>Senha:</strong> admin123<br>
+                <strong>Usuário:</strong> user | <strong>Senha:</strong> user123
+            </p>
+        </div>
+    </div>
+
+    <!-- Conteúdo Protegido (aparece após login) -->
+    <div class="protected-content" id="protectedContent">
+        <h2>Bem-vindo ao Sistema de Catequese!</h2>
+        
+        <div class="permission-demo">
+            <h3>Demonstração de Permissões</h3>
+            <p>Os botões abaixo só aparecem se você tiver as permissões correspondentes:</p>
+
+            <div class="demo-section">
+                <h4>Administração do Sistema</h4>
+                <div class="demo-buttons">
+                    <button class="btn btn-secondary" data-permission="sistema.configurar">
+                        Configurar Sistema
+                    </button>
+                    <button class="btn btn-danger" data-permission="sistema.configurar">
+                        Backup do Sistema
+                    </button>
+                </div>
+            </div>
+
+            <div class="demo-section">
+                <h4>Gestão de Usuários</h4>
+                <div class="demo-buttons">
+                    <button class="btn btn-success" data-permission="usuarios.criar">
+                        Criar Usuário
+                    </button>
+                    <button class="btn btn-secondary" data-permission="usuarios.editar">
+                        Editar Usuários
+                    </button>
+                    <button class="btn btn-danger" data-permission="usuarios.deletar">
+                        Deletar Usuários
+                    </button>
+                </div>
+            </div>
+
+            <div class="demo-section">
+                <h4>Inscrições</h4>
+                <div class="demo-buttons">
+                    <button class="btn btn-success" data-permission="inscricoes.criar">
+                        Nova Inscrição
+                    </button>
+                    <button class="btn btn-secondary" data-permission="inscricoes.editar">
+                        Editar Inscrições
+                    </button>
+                    <button class="btn" data-permission="inscricoes.consultar">
+                        Consultar Inscrições
+                    </button>
+                </div>
+            </div>
+
+            <div class="demo-section">
+                <h4>Relatórios</h4>
+                <div class="demo-buttons">
+                    <button class="btn btn-secondary" data-permission="relatorios.gerar">
+                        Gerar Relatórios
+                    </button>
+                    <button class="btn" data-permission="relatorios.gerar">
+                        Exportar Dados
+                    </button>
+                </div>
+            </div>
+
+            <div class="demo-section">
+                <h4>Grupos Específicos</h4>
+                <div class="demo-buttons">
+                    <button class="btn btn-secondary" data-group="administradores">
+                        Somente Administradores
+                    </button>
+                    <button class="btn" data-group="coordenadores">
+                        Somente Coordenadores
+                    </button>
+                    <button class="btn btn-success" data-group="catequistas">
+                        Somente Catequistas
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="userManagement"></div>
+    </div>
+
+    <!-- Inclui o sistema de autenticação -->
+    <script src="auth-example.js"></script>
+    
+    <script>
+        // Mock de dados para demonstração
+        const mockUsers = [
+            {
+                id: 1,
+                nome: 'Administrador',
+                usuario: 'admin',
+                email: 'admin@catequese.com',
+                permissions: [
+                    'sistema.configurar',
+                    'usuarios.criar',
+                    'usuarios.editar',
+                    'usuarios.deletar',
+                    'usuarios.listar',
+                    'inscricoes.criar',
+                    'inscricoes.editar',
+                    'inscricoes.deletar',
+                    'inscricoes.consultar',
+                    'relatorios.gerar'
+                ],
+                grupos: ['administradores']
+            },
+            {
+                id: 2,
+                nome: 'Usuário Comum',
+                usuario: 'user',
+                email: 'user@catequese.com',
+                permissions: [
+                    'inscricoes.consultar'
+                ],
+                grupos: ['consultores']
+            }
+        ];
+
+        // Override do fetch para simular API
+        const originalFetch = window.fetch;
+        window.fetch = function(url, options = {}) {
+            console.log('Fetch interceptado:', url, options);
+
+            // Simular login
+            if (url.includes('/api/auth/login')) {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        try {
+                            const body = JSON.parse(options.body);
+                            const user = mockUsers.find(u => u.usuario === body.usuario);
+                            
+                            if (user && (
+                                (body.usuario === 'admin' && body.senha === 'admin123') ||
+                                (body.usuario === 'user' && body.senha === 'user123')
+                            )) {
+                                resolve({
+                                    json: () => Promise.resolve({
+                                        success: true,
+                                        data: {
+                                            token: 'mock_token_' + Date.now(),
+                                            usuario: user
+                                        }
+                                    }),
+                                    ok: true
+                                });
+                            } else {
+                                resolve({
+                                    json: () => Promise.resolve({
+                                        success: false,
+                                        message: 'Usuário ou senha inválidos'
+                                    }),
+                                    ok: false
+                                });
+                            }
+                        } catch (e) {
+                            resolve({
+                                json: () => Promise.resolve({
+                                    success: false,
+                                    message: 'Erro no servidor'
+                                }),
+                                ok: false
+                            });
+                        }
+                    }, 1000);
+                });
+            }
+
+            // Simular listagem de usuários
+            if (url.includes('/api/usuarios') && options.method !== 'POST') {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        resolve({
+                            json: () => Promise.resolve({
+                                success: true,
+                                data: mockUsers
+                            }),
+                            ok: true
+                        });
+                    }, 500);
+                });
+            }
+
+            // Simular outras operações
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    resolve({
+                        json: () => Promise.resolve({
+                            success: true,
+                            message: 'Operação realizada com sucesso'
+                        }),
+                        ok: true
+                    });
+                }, 500);
+            });
+        };
+
+        // Configurar eventos após autenticação
+        window.addEventListener('authStateChanged', (e) => {
+            const { isAuthenticated, user } = e.detail;
+            
+            const loginContainer = document.getElementById('loginContainer');
+            const protectedContent = document.getElementById('protectedContent');
+            const navigation = document.getElementById('navigation');
+            
+            if (isAuthenticated) {
+                loginContainer.style.display = 'none';
+                protectedContent.classList.add('show');
+                navigation.classList.add('show');
+                
+                // Configurar info do usuário
+                const userInfo = document.getElementById('userInfo');
+                if (userInfo) {
+                    userInfo.innerHTML = `
+                        <div>
+                            <strong>${user.nome}</strong><br>
+                            <small style="color: #666;">${user.usuario}</small>
+                        </div>
+                        <button id="logoutBtn" class="btn btn-danger" style="padding: 4px 8px; font-size: 12px;">
+                            Sair
+                        </button>
+                    `;
+                    
+                    document.getElementById('logoutBtn')?.addEventListener('click', () => {
+                        if (confirm('Deseja realmente sair do sistema?')) {
+                            auth.logout();
+                        }
+                    });
+                }
+                
+                // Inicializar gestão de usuários se tiver permissão
+                if (auth.hasPermission('usuarios.listar')) {
+                    new CatequeseAuth.UserManagementComponent();
+                }
+            } else {
+                loginContainer.style.display = 'block';
+                protectedContent.classList.remove('show');
+                navigation.classList.remove('show');
+            }
+        });
+
+        // Verificar se já está autenticado na inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            if (auth.isAuthenticated()) {
+                auth.notifyAuthChange();
+            }
+        });
+    </script>
+</body>
+</html>

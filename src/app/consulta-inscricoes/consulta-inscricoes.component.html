@@ -134,6 +134,7 @@
       <table class="inscricoes-table">
         <thead>
           <tr>
+            <th class="acoes-column">Ações</th>
             <th class="tipo-column">Tipo de Inscrição</th>
             <th class="status-column">Status</th>
             <th class="nome-column">Nome Completo</th>
@@ -166,11 +167,26 @@
             <th class="catequista-column">Catequista</th>
             <th class="curso-column">Horário Curso</th>
             <th class="documentos-column">Documentos</th>
-            <th class="acoes-column">Ações</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let inscricao of inscricoes; let i = index" [class.even]="i % 2 === 0">
+            <td class="acoes-column acoes-cell">
+              <div class="acoes-buttons">
+                <button class="btn-small btn-info" title="Ver Detalhes" (click)="verDetalhes(inscricao)">
+                  👁️
+                </button>
+                <button class="btn-small btn-warning" title="Editar" (click)="editarInscricao(inscricao)">
+                  ✏️
+                </button>
+                <button class="btn-small btn-danger" title="Excluir" (click)="excluirInscricao(inscricao)">
+                  🗑️
+                </button>
+                <button class="btn-small btn-status" title="Status" [routerLink]="['/admin-status', inscricao.id]">
+                  📊
+                </button>
+              </div>
+            </td>
             <td class="tipo-column">
               <span class="badge" [class.badge-catequese]="inscricao.tipoInscricao === 'catequese'"
                     [class.badge-catecumenato]="inscricao.tipoInscricao === 'catecumenato'"
@@ -290,22 +306,6 @@
                 <div class="sem-documentos" *ngIf="!inscricao.documentoIdentidadeNome && !inscricao.certidaoBatismoNome">
                   <span class="texto-sem-docs">📄 Nenhum documento anexado</span>
                 </div>
-              </div>
-            </td>
-            <td class="acoes-column acoes-cell">
-              <div class="acoes-buttons">
-                <button class="btn-small btn-info" title="Ver Detalhes" (click)="verDetalhes(inscricao)">
-                  👁️
-                </button>
-                <button class="btn-small btn-warning" title="Editar" (click)="editarInscricao(inscricao)">
-                  ✏️
-                </button>
-                <button class="btn-small btn-danger" title="Excluir" (click)="excluirInscricao(inscricao)">
-                  🗑️
-                </button>
-                <button class="btn-small btn-status" title="Status" [routerLink]="['/admin-status', inscricao.id]">
-                  📊
-                </button>
               </div>
             </td>
           </tr>

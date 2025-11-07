@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { InscricaoService } from '../services/inscricao.service';
 import { Crismando } from '../model/crismando.model';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-consulta-inscricoes',
@@ -21,7 +22,8 @@ export class ConsultaInscricoesComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private inscricaoService: InscricaoService
+    private inscricaoService: InscricaoService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.consultaForm = this.fb.group({
       email: [''],
@@ -35,7 +37,10 @@ export class ConsultaInscricoesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.carregarTodasInscricoes();
+    // Só carregar dados se estivermos no browser (não durante SSR)
+    if (isPlatformBrowser(this.platformId)) {
+      this.carregarTodasInscricoes();
+    }
   }
 
   carregarTodasInscricoes() {
@@ -295,7 +300,7 @@ export class ConsultaInscricoesComponent implements OnInit {
   // ====== MÉTODOS PARA DOCUMENTOS ======
 
   baixarDocumento(tipo: string, inscricaoId: number, nomeArquivo: string) {
-    const url = `https://projeto-cadastro-g6xl.vercel.app/api/arquivo/${tipo}/${inscricaoId}`;
+    const url = `${environment.baseUrl}/api/arquivo/${tipo}/${inscricaoId}`;
     
     // Criar um link temporário para forçar o download
     const link = document.createElement('a');
