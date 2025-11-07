@@ -1,0 +1,255 @@
+<!-- CONTEÚDO PRINCIPAL -->
+<main class="main-content">
+  <div class="container">
+    <div class="header">
+      <h1>✝️ Inscrição para Catequese</h1>
+      <p>Comunidade Nossa Senhora Aparecida - Potuvera - Preparação Sacramental</p>
+    </div>
+
+    <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+      <fieldset>
+        <legend>👤 Informações do Inscrito</legend>
+        
+        <label>
+          Inscrição para <span class="required">*</span>
+          <select formControlName="tipoInscricao">
+            <option value="">Selecione o tipo de inscrição</option>
+            <option value="catequese">Catequese</option>
+            <option value="catecumenato">Catecumenato</option>
+            <option value="crisma">Crisma</option>
+          </select>
+        </label>
+        
+        <label>
+          E-mail <span class="required">*</span>
+          <input formControlName="email" type="email" placeholder="seu@email.com" />
+        </label>
+        
+        <label>
+          Nome Completo <span class="required">*</span>
+          <input formControlName="nomeCompleto" type="text" placeholder="Nome completo" />
+        </label>
+        
+        <div class="form-row">
+          <label class="form-col">
+            Data de Nascimento <span class="required">*</span>
+            <input formControlName="dataNascimento" type="date" />
+          </label>
+          
+          <div class="form-col">
+            <label>Sexo <span class="required">*</span></label>
+            <div class="radio-group">
+              <label>
+                <input formControlName="sexo" type="radio" value="masculino" /> Masculino
+              </label>
+              <label>
+                <input formControlName="sexo" type="radio" value="feminino" /> Feminino
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <fieldset>
+          <legend>📄 Informações de Documento</legend>
+          
+          <div class="checkbox-group">
+            <label>
+              <input formControlName="possuiRG" type="checkbox" /> Possui RG ou CNH
+            </label>
+            <label>
+              <input formControlName="possuiCPF" type="checkbox" /> Possui CPF
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>🏠 Endereço</legend>
+          
+          <div class="radio-group inline-radio">
+            <label>
+              <input formControlName="enderecoCompleto" type="radio" value="potuvera" /> Potuvera
+            </label>
+            <label>
+              <input formControlName="enderecoCompleto" type="radio" value="outra_localidade" /> Outra localidade
+            </label>
+          </div>
+
+          <div formGroupName="endereco">
+            <label>
+              CEP
+              <input formControlName="cep" type="text" placeholder="00000-000" />
+            </label>
+            
+            <label>
+              Endereço Completo
+              <input formControlName="logradouro" type="text" placeholder="Rua, número, complemento" />
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>📎 Upload de Documentos</legend>
+          
+          <div class="document-upload-section">
+            <p><strong>Documentos obrigatórios:</strong></p>
+            
+            <div class="upload-group">
+              <label>
+                RG ou CNH (obrigatório)
+                <input 
+                  type="file" 
+                  accept="image/*,.pdf" 
+                  (change)="onFileSelect($event, 'documentoIdentidade')"
+                />
+                <div class="file-info" *ngIf="arquivos.documentoIdentidade">
+                  <span>📄 {{ arquivos.documentoIdentidade.name }}</span>
+                  <button type="button" (click)="removerArquivo('documentoIdentidade')">🗑️</button>
+                </div>
+              </label>
+            </div>
+
+            <div class="upload-group">
+              <label>
+                Certidão de Batismo (obrigatório)
+                <input 
+                  type="file" 
+                  accept="image/*,.pdf" 
+                  (change)="onFileSelect($event, 'certidaoBatismo')"
+                />
+                <div class="file-info" *ngIf="arquivos.certidaoBatismo">
+                  <span>📄 {{ arquivos.certidaoBatismo.name }}</span>
+                  <button type="button" (click)="removerArquivo('certidaoBatismo')">🗑️</button>
+                </div>
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </fieldset>
+
+      <fieldset>
+        <legend>👨‍👩‍👧‍👦 Informações da Família</legend>
+        
+        <label>
+          Nome da Mãe <span class="required">*</span>
+          <input formControlName="nomeMae" type="text" placeholder="Nome completo da mãe" />
+        </label>
+        
+        <label>
+          Nome do Pai
+          <input formControlName="nomePai" type="text" placeholder="Nome completo do pai" />
+        </label>
+
+        <fieldset>
+          <legend>📞 Dados do Responsável</legend>
+          
+          <div class="radio-group">
+            <label>
+              <input formControlName="responsavel" type="radio" value="mae" /> Mãe
+            </label>
+            <label>
+              <input formControlName="responsavel" type="radio" value="pai" /> Pai
+            </label>
+            <label>
+              <input formControlName="responsavel" type="radio" value="outro" /> Outro responsável
+            </label>
+          </div>
+
+          <label>
+            Nome do Responsável <span class="required">*</span>
+            <input formControlName="nomeResponsavel" type="text" placeholder="Nome do responsável" />
+          </label>
+
+          <div class="radio-group">
+            <label>
+              <input formControlName="grauParentesco" type="radio" value="pai" /> Pai
+            </label>
+            <label>
+              <input formControlName="grauParentesco" type="radio" value="mae" /> Mãe
+            </label>
+            <label>
+              <input formControlName="grauParentesco" type="radio" value="avo" /> Avô/Avó
+            </label>
+            <label>
+              <input formControlName="grauParentesco" type="radio" value="tio" /> Tio/Tia
+            </label>
+            <label>
+              <input formControlName="grauParentesco" type="radio" value="outro" /> Outro
+            </label>
+          </div>
+
+          <div class="radio-group inline-radio">
+            <label>
+              <input formControlName="responsavelMoraPotuvera" type="radio" value="sim" /> Mora em Potuvera
+            </label>
+            <label>
+              <input formControlName="responsavelMoraPotuvera" type="radio" value="nao" /> Não mora em Potuvera
+            </label>
+          </div>
+
+          <fieldset>
+            <legend>📱 Contatos</legend>
+            
+            <div class="checkbox-group">
+              <label>
+                <input formControlName="possuiWhatsApp" type="checkbox" /> Possui WhatsApp
+              </label>
+            </div>
+
+            <div class="form-row">
+              <label class="form-col">
+                Telefone Principal <span class="required">*</span>
+                <input formControlName="telefonePrincipal" type="tel" placeholder="(00) 00000-0000" />
+              </label>
+              
+              <label class="form-col">
+                Telefone Alternativo
+                <input formControlName="telefoneAlternativo" type="tel" placeholder="(00) 00000-0000" />
+              </label>
+            </div>
+          </fieldset>
+        </fieldset>
+      </fieldset>
+
+      <fieldset>
+        <legend>⛪ Informações Religiosas</legend>
+        
+        <label>
+          Igreja onde foi batizado <span class="required">*</span>
+          <input formControlName="igrejaBatismo" type="text" placeholder="Nome da igreja" />
+        </label>
+        
+        <label>
+          Observações ou comentários
+          <textarea formControlName="observacoes" rows="4" placeholder="Alguma informação adicional que gostaria de compartilhar..."></textarea>
+        </label>
+      </fieldset>
+
+      <!-- MENSAGENS DE VALIDAÇÃO -->
+      <div *ngIf="formulario.invalid" class="alert alert-error">
+        <h4>⚠️ Atenção! Existem campos obrigatórios não preenchidos:</h4>
+        <ul>
+          <li *ngIf="formulario.get('tipoInscricao')?.invalid">• Tipo de inscrição é obrigatório</li>
+          <li *ngIf="formulario.get('email')?.invalid">• E-mail é obrigatório e deve ser válido</li>
+          <li *ngIf="formulario.get('nomeCompleto')?.invalid">• Nome completo é obrigatório</li>
+          <li *ngIf="formulario.get('dataNascimento')?.invalid">• Data de nascimento é obrigatória</li>
+          <li *ngIf="formulario.get('sexo')?.invalid">• Sexo é obrigatório</li>
+          <li *ngIf="formulario.get('nomeMae')?.invalid">• Nome da mãe é obrigatório</li>
+          <li *ngIf="formulario.get('nomeResponsavel')?.invalid">• Nome do responsável é obrigatório</li>
+          <li *ngIf="formulario.get('telefonePrincipal')?.invalid">• Telefone principal é obrigatório</li>
+          <li *ngIf="formulario.get('igrejaBatismo')?.invalid">• Igreja onde foi batizado é obrigatória</li>
+        </ul>
+      </div>
+
+      <!-- MENSAGEM DE SUCESSO -->
+      <div *ngIf="formulario.valid" class="alert alert-success">
+        ✅ <strong>Formulário preenchido corretamente!</strong> Você pode enviar sua inscrição.
+      </div>
+
+      <div class="buttons-container">
+        <button type="submit" [disabled]="formulario.invalid" class="btn-primary">
+          ✝️ Enviar Inscrição
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
