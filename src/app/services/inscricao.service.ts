@@ -3,12 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Crismando } from '../model/crismando.model';
 import { StatusControle } from '../model/status-controle.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InscricaoService {
-  private apiUrl = 'https://projeto-cadastro-g6xl.vercel.app/api'; // URL do backend
+  private apiUrl = environment.apiUrl + '/api'; // Usando URL do environment
 
   constructor(private http: HttpClient) { }
 

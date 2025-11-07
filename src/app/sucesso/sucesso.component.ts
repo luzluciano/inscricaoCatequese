@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -12,15 +12,18 @@ import { RouterLink, ActivatedRoute } from '@angular/router';
 export class SucessoComponent implements OnInit {
   dadosInscricao: any = null;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, @Inject(PLATFORM_ID) private platformId: Object) {}
 
   ngOnInit() {
-    // Recuperar dados da inscrição dos parâmetros da rota ou sessionStorage
-    const dadosSession = sessionStorage.getItem('dadosInscricaoSucesso');
-    if (dadosSession) {
-      this.dadosInscricao = JSON.parse(dadosSession);
-      // Limpar dados após uso
-      sessionStorage.removeItem('dadosInscricaoSucesso');
+    // Só acessar sessionStorage no browser
+    if (isPlatformBrowser(this.platformId)) {
+      // Recuperar dados da inscrição dos parâmetros da rota ou sessionStorage
+      const dadosSession = sessionStorage.getItem('dadosInscricaoSucesso');
+      if (dadosSession) {
+        this.dadosInscricao = JSON.parse(dadosSession);
+        // Limpar dados após uso
+        sessionStorage.removeItem('dadosInscricaoSucesso');
+      }
     }
   }
 

@@ -4,6 +4,7 @@ import { RouterLink, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { InscricaoService } from '../services/inscricao.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-inscricao-form',
@@ -140,7 +141,7 @@ export class InscricaoFormComponent implements OnInit {
   }
 
   testarConexao() {
-    this.http.get('https://projeto-cadastro-g6xl.vercel.app/api/test').subscribe({
+    this.http.get(`${environment.apiUrl}/test`).subscribe({
       next: (response) => {
         console.log('✅ Conexão OK:', response);
         alert('✅ Conexão com o backend funcionando!');
@@ -163,7 +164,7 @@ export class InscricaoFormComponent implements OnInit {
   }
 
   corrigirComunhao() {
-    this.http.post('https://projeto-cadastro-g6xl.vercel.app/api/fix-comunhao', {}).subscribe({
+    this.http.post(`${environment.apiUrl}/fix-comunhao`, {}).subscribe({
       next: (response) => {
         console.log('✅ Correção aplicada:', response);
         alert('✅ Correção da base de dados aplicada!');

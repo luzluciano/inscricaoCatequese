@@ -1,0 +1,293 @@
+<div class="user-management">
+  <div class="header">
+    <h2>Gestão de Usuários</h2>
+    <button 
+      class="btn btn-primary"
+      (click)="showCreateForm = true"
+      [disabled]="showCreateForm"
+    >
+      Criar Usuário
+    </button>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Formulário de criação -->
+  <div *ngIf="showCreateForm" class="create-form">
+    <div class="form-header">
+      <h3>Criar Novo Usuário</h3>
+      <button class="btn-close" (click)="showCreateForm = false">&times;</button>
+    </div>
+
+    <form (ngSubmit)="createUser()" class="user-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nome">Nome Completo *</label>
+          <input 
+            type="text" 
+            id="nome" 
+            [(ngModel)]="newUser.nome"
+            name="nome"
+            required
+            class="form-control"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="usuario">Usuário *</label>
+          <input 
+            type="text" 
+            id="usuario" 
+            [(ngModel)]="newUser.usuario"
+            name="usuario"
+            required
+            class="form-control"
+          >
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="senha">Senha *</label>
+          <input 
+            type="password" 
+            id="senha" 
+            [(ngModel)]="newUser.senha"
+            name="senha"
+            required
+            class="form-control"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input 
+            type="email" 
+            id="email" 
+            [(ngModel)]="newUser.email"
+            name="email"
+            class="form-control"
+          >
+        </div>
+      </div>
+
+      <div class="permissions-section">
+        <h4>Permissões</h4>
+        <div class="permissions-grid">
+          <label 
+            *ngFor="let permission of availablePermissions" 
+            class="permission-item"
+          >
+            <input 
+              type="checkbox" 
+              [checked]="hasPermission(permission)"
+              (change)="togglePermission(permission)"
+            >
+            <span>{{ permission }}</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="groups-section">
+        <h4>Grupos</h4>
+        <div class="groups-grid">
+          <label 
+            *ngFor="let group of availableGroups" 
+            class="group-item"
+          >
+            <input 
+              type="checkbox" 
+              [checked]="belongsToGroup(group)"
+              (change)="toggleGroup(group)"
+            >
+            <span>{{ group | titlecase }}</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="showCreateForm = false">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="loading">
+          {{ loading ? 'Criando...' : 'Criar Usuário' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Formulário de edição -->
+  <div *ngIf="showEditForm" class="edit-form">
+    <div class="form-header">
+      <h3>Editar Usuário</h3>
+      <button class="btn-close" (click)="showEditForm = false">&times;</button>
+    </div>
+
+    <form (ngSubmit)="updateUser()" class="user-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="editNome">Nome Completo</label>
+          <input 
+            type="text" 
+            id="editNome" 
+            [(ngModel)]="editingUserData.nome"
+            name="editNome"
+            class="form-control"
+            placeholder="Deixe vazio para não alterar"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="editUsuario">Usuário</label>
+          <input 
+            type="text" 
+            id="editUsuario" 
+            [(ngModel)]="editingUserData.usuario"
+            name="editUsuario"
+            class="form-control"
+            placeholder="Deixe vazio para não alterar"
+          >
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="editSenha">Nova Senha</label>
+          <input 
+            type="password" 
+            id="editSenha" 
+            [(ngModel)]="editingUserData.senha"
+            name="editSenha"
+            class="form-control"
+            placeholder="Deixe vazio para não alterar a senha"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="editGrupo">Grupo/Perfil</label>
+          <select 
+            id="editGrupo" 
+            [(ngModel)]="editingUserData.grupo"
+            name="editGrupo"
+            class="form-control"
+          >
+            <option *ngFor="let grupo of availableGrupos" [value]="grupo.value">
+              {{ grupo.label }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input 
+              type="checkbox" 
+              [(ngModel)]="editingUserData.ativo"
+              name="editAtivo"
+            >
+            <span>Usuário Ativo</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="showEditForm = false">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="loading">
+          {{ loading ? 'Salvando...' : 'Salvar Alterações' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Lista de usuários -->
+  <div class="users-list">
+    <div *ngIf="loading" class="loading">
+      Carregando usuários...
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="!loading && users.length === 0" class="empty-state">
+      Nenhum usuário encontrado.
+    </div>
+
+    <div *ngIf="!loading && users.length > 0" class="users-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Usuário</th>
+            <th>E-mail</th>
+            <th>Permissões</th>
+            <th>Grupos</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.nome }}</td>
+            <td>{{ user.usuario }}</td>
+            <td>{{ user.email || '-' }}</td>
+            <td>
+              <div class="permissions-list">
+                <span 
+                  *ngFor="let permission of getUserPermissions(user).slice(0, 3)" 
+                  class="permission-badge"
+                >
+                  {{ permission }}
+                </span>
+                <span 
+                  *ngIf="getUserPermissions(user).length > 3"
+                  class="more-permissions"
+                >
+                  +{{ getUserPermissions(user).length - 3 }} mais
+                </span>
+                <span *ngIf="getUserPermissions(user).length === 0" class="no-permissions">
+                  Nenhuma permissão
+                </span>
+              </div>
+            </td>
+            <td>
+              <div class="groups-list">
+                <span 
+                  *ngFor="let group of getUserGroups(user)" 
+                  class="group-badge"
+                >
+                  {{ group | titlecase }}
+                </span>
+                <span *ngIf="getUserGroups(user).length === 0" class="no-groups">
+                  Nenhum grupo
+                </span>
+              </div>
+            </td>
+            <td>
+              <div class="actions">
+                <button 
+                  class="btn btn-sm btn-secondary"
+                  (click)="editUser(user)"
+                  title="Editar usuário"
+                >
+                  ✏️
+                </button>
+                <button 
+                  class="btn btn-sm btn-danger"
+                  (click)="deleteUser(user.id)"
+                  title="Deletar usuário"
+                >
+                  🗑️
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
