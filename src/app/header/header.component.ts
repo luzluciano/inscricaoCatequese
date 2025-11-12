@@ -15,6 +15,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
   isLoggedIn = false;
   showInscricoesDropdown = false;
+  showAdminDropdown = false;
   private userSubscription?: Subscription;
 
   constructor(
@@ -35,6 +36,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         const target = event.target as HTMLElement;
         if (!target.closest('.nav-dropdown')) {
           this.showInscricoesDropdown = false;
+          this.showAdminDropdown = false;
         }
       });
     }
@@ -48,10 +50,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   toggleInscricoesDropdown() {
     this.showInscricoesDropdown = !this.showInscricoesDropdown;
+    this.showAdminDropdown = false; // Fechar outros dropdowns
+  }
+
+  toggleAdminDropdown() {
+    this.showAdminDropdown = !this.showAdminDropdown;
+    this.showInscricoesDropdown = false; // Fechar outros dropdowns
   }
 
   closeDropdowns() {
     this.showInscricoesDropdown = false;
+    this.showAdminDropdown = false;
   }
 
   hasPermission(permission: string): boolean {
@@ -68,6 +77,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   goToHome() {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/homeFixa']);
   }
 }

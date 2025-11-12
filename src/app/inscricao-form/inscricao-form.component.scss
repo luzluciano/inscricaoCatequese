@@ -1,17 +1,24 @@
-/* === ESTILOS LOCAIS DO COMPONENTE === */
-.main-content {
-  padding: 20px 0;
+/* === ESTILOS GERAIS === */
+* {
+  box-sizing: border-box;
+}
 
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-    background: white;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    border-radius: 15px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  border-radius: 15px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 /* === CABEÇALHO === */
@@ -315,17 +322,17 @@ button:hover:before {
 
 /* === RESPONSIVIDADE === */
 @media (max-width: 768px) {
-  .main-content .container {
+  .container {
     margin: 10px;
     padding: 15px;
     border-radius: 10px;
   }
   
-  .main-content .header h1 {
+  .header h1 {
     font-size: 2rem;
   }
   
-  .main-content .buttons-container {
+  .buttons-container {
     flex-direction: column;
     align-items: stretch;
   }
@@ -351,17 +358,17 @@ button:hover:before {
 }
 
 @media (max-width: 480px) {
-  .main-content .header h1 {
+  .header h1 {
     font-size: 1.8rem;
   }
   
-  .main-content fieldset {
+  fieldset {
     padding: 15px;
   }
   
-  .main-content input[type="text"],
-  .main-content input[type="email"],
-  .main-content input[type="date"] {
+  input[type="text"],
+  input[type="email"],
+  input[type="date"] {
     padding: 10px 12px;
   }
 }

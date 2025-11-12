@@ -1,0 +1,505 @@
+// Variáveis
+$primary-color: #2196F3;
+$secondary-color: #4CAF50;
+$accent-color: #FF9800;
+$danger-color: #f44336;
+$text-primary: #333;
+$text-secondary: #666;
+$background-light: #f8f9fa;
+$border-color: #e0e0e0;
+$shadow-light: 0 2px 4px rgba(0,0,0,0.1);
+$shadow-medium: 0 4px 8px rgba(0,0,0,0.15);
+$shadow-strong: 0 8px 16px rgba(0,0,0,0.2);
+
+// Mixins
+@mixin transition($property: all, $duration: 0.3s, $timing: ease) {
+  transition: $property $duration $timing;
+}
+
+@mixin hover-lift {
+  @include transition(transform, 0.2s, ease);
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+@mixin card-style {
+  background: white;
+  border-radius: 12px;
+  box-shadow: $shadow-light;
+  @include transition();
+  
+  &:hover {
+    box-shadow: $shadow-medium;
+  }
+}
+
+// Container principal
+.home2-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+// Hero Section
+.hero-section {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+  padding: 80px 20px 60px;
+  text-align: center;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,100 100,0 200,100 300,0 400,100 500,0 600,100 700,0 800,100 900,0 1000,100 1000,200 0,200"/></svg>') repeat-x;
+    background-size: 200px 100px;
+  }
+  
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .hero-text {
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      color: white;
+      margin-bottom: 16px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      line-height: 1.2;
+    }
+    
+    p {
+      font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+      color: rgba(255, 255, 255, 0.9);
+      margin: 0;
+      font-weight: 300;
+    }
+  }
+}
+
+// Container genérico
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+// Seção de Spots
+.spots-section {
+  padding: 60px 20px;
+  background: $background-light;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: $background-light;
+    clip-path: ellipse(100% 100% at 50% 100%);
+  }
+}
+
+// Estados de Loading/Error/Empty
+.loading-container {
+  text-align: center;
+  padding: 60px 20px;
+  
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #e0e0e0;
+    border-top: 4px solid $primary-color;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+  }
+  
+  p {
+    color: $text-secondary;
+    font-size: 1.1rem;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-container {
+  text-align: center;
+  padding: 60px 20px;
+  
+  .error-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+  }
+  
+  p {
+    color: $danger-color;
+    font-size: 1.1rem;
+    margin-bottom: 24px;
+  }
+  
+  .retry-button {
+    background: $primary-color;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    @include transition();
+    
+    &:hover {
+      background: darken($primary-color, 10%);
+      transform: translateY(-1px);
+    }
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+  }
+  
+  h3 {
+    color: $text-primary;
+    margin-bottom: 12px;
+    font-size: 1.5rem;
+  }
+  
+  p {
+    color: $text-secondary;
+    font-size: 1.1rem;
+  }
+}
+
+// Grid de Spots
+.spots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 20px;
+}
+
+// Layout especial para spot de largura total
+.spot-full-width {
+  grid-column: 1 / -1; // Ocupa todas as colunas disponíveis
+  
+  .spot-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .spot-title {
+    font-size: 2rem !important;
+  }
+  
+  .spot-subtitle {
+    font-size: 1.2rem !important;
+  }
+  
+  .spot-description {
+    font-size: 1.1rem !important;
+  }
+  
+  // Layout horizontal para telas maiores
+  @media (min-width: 768px) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 40px 32px;
+    
+    .spot-icon {
+      margin-bottom: 0;
+      margin-right: 32px;
+      font-size: 4rem !important;
+      flex-shrink: 0;
+    }
+    
+    .spot-content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      text-align: left;
+      max-width: none;
+      
+      .spot-text {
+        flex: 1;
+      }
+      
+      .spot-action {
+        margin-top: 0;
+        margin-left: 32px;
+        flex-shrink: 0;
+      }
+    }
+  }
+}
+
+// Card de Spot
+.spot-card {
+  @include card-style;
+  padding: 32px 24px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  
+  @include hover-lift;
+  
+  &:focus {
+    outline: 3px solid $primary-color;
+    outline-offset: 2px;
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--spot-accent, #ccc);
+    opacity: 0.7;
+  }
+  
+  .spot-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    text-align: center;
+    line-height: 1;
+  }
+  
+  .spot-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    
+    .spot-text {
+      flex: 1;
+    }
+  }
+  
+  .spot-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  
+  .spot-subtitle {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 16px;
+    opacity: 0.8;
+  }
+  
+  .spot-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    flex: 1;
+    opacity: 0.9;
+  }
+  
+  .spot-action {
+    margin-top: auto;
+    
+    .action-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 12px 24px;
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      @include transition();
+      
+      .action-arrow {
+        @include transition(transform, 0.2s);
+      }
+    }
+    
+    &:hover .action-button {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.05);
+      
+      .action-arrow {
+        transform: translateX(4px);
+      }
+    }
+  }
+  
+  .spot-type-indicator {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    opacity: 0.6;
+    
+    &[data-type="informacao"] {
+      background: #2196F3;
+    }
+    
+    &[data-type="acao"] {
+      background: #4CAF50;
+    }
+    
+    &[data-type="destaque"] {
+      background: #FF9800;
+    }
+    
+    &[data-type="promocional"] {
+      background: #9C27B0;
+    }
+  }
+}
+
+// Tipos específicos de spots
+.spot-informacao {
+  --spot-accent: #2196F3;
+}
+
+.spot-acao {
+  --spot-accent: #4CAF50;
+}
+
+.spot-destaque {
+  --spot-accent: #FF9800;
+}
+
+.spot-promocional {
+  --spot-accent: #9C27B0;
+}
+
+// Seção da Comunidade
+.community-section {
+  background: white;
+  padding: 60px 20px;
+  
+  .community-info {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    max-width: 800px;
+    margin: 0 auto;
+    
+    .community-icon {
+      font-size: 4rem;
+      flex-shrink: 0;
+    }
+    
+    .community-text {
+      flex: 1;
+      
+      h2 {
+        color: $text-primary;
+        font-size: 2rem;
+        margin-bottom: 16px;
+        font-weight: 600;
+      }
+      
+      p {
+        color: $text-secondary;
+        font-size: 1.1rem;
+        line-height: 1.7;
+        margin: 0;
+      }
+    }
+  }
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .spots-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .spot-card {
+    min-height: 250px;
+    padding: 24px 20px;
+    
+    .spot-icon {
+      font-size: 2.5rem;
+    }
+    
+    .spot-title {
+      font-size: 1.3rem;
+    }
+  }
+  
+  .community-info {
+    flex-direction: column;
+    text-align: center;
+    gap: 24px;
+    
+    .community-icon {
+      font-size: 3rem;
+    }
+    
+    .community-text h2 {
+      font-size: 1.8rem;
+    }
+  }
+  
+  .hero-section {
+    padding: 60px 20px 40px;
+  }
+  
+  .spots-section {
+    padding: 40px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .spots-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .spot-card {
+    padding: 20px 16px;
+    min-height: 220px;
+  }
+  
+  .community-section {
+    padding: 40px 20px;
+  }
+}
+
+// Acessibilidade
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// Modo escuro (se necessário no futuro)
+@media (prefers-color-scheme: dark) {
+  // Implementar variáveis de modo escuro aqui se necessário
+}

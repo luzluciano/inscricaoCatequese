@@ -13,7 +13,13 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
   
   // Lista de rotas públicas que não precisam de autorização
   const publicRoutes = [
-    '/api/login'
+    '/api/login',
+    '/api/spots/ativos',
+    '/api/inscricoes-com-arquivos',
+    '/api/health',
+    '/api/test',
+    '/api/check-table',
+    '/api/fix-comunhao'
   ];
   
   // Verificar se é uma rota pública
@@ -23,14 +29,19 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
   const isUserCreation = req.url.includes('/api/usuarios') && req.method === 'POST' && !authService.getToken();
   
   if (isPublicRoute || isUserCreation) {
-    console.log('🌐 Rota pública detectada, não adicionando Authorization header');
+    console.log('🌐 Rota pública detectada:', req.url, '- não adicionando Authorization header');
     return next(req);
   }
   
   // Obter token do cookie via AuthService
-  const token = authService.getToken();
+  let token: string | null = null;
+  try {
+    token = authService.getToken();
+  } catch (error) {
+    console.warn('⚠️ Erro ao obter token (possível SSR):', error);
+  }
+  
   console.log('🔑 Token encontrado:', token ? 'Sim' : 'Não');
-  console.log('🔑 Token valor:', token);
   
   let authReq = req;
   
@@ -41,9 +52,9 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
         'Authorization': `Bearer ${token}`
       }
     });
-    console.log('✅ Token adicionado ao header Authorization');
+    console.log('✅ Token adicionado ao header Authorization para:', req.url);
   } else {
-    console.log('❌ Nenhum token encontrado - header Authorization não adicionado');
+    console.log('❌ Nenhum token encontrado para:', req.url, '- header Authorization não adicionado');
   }
   
   return next(authReq).pipe(

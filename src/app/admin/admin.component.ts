@@ -46,6 +46,14 @@ import { AuthService } from '../auth/auth.service';
           </div>
           
           <div class="admin-card">
+            <h3>🎯 Gerenciar Spots</h3>
+            <p>Configurar conteúdo da página inicial (Home)</p>
+            <a routerLink="/admin/spots" class="btn btn-primary">
+              Acessar
+            </a>
+          </div>
+          
+          <div class="admin-card">
             <h3>📈 Status das Inscrições</h3>
             <p>Gerenciar status e histórico das inscrições</p>
             <button type="button" class="btn btn-primary" (click)="manageStatus()">
@@ -63,7 +71,7 @@ import { AuthService } from '../auth/auth.service';
         </div>
         
         <div class="actions">
-          <button type="button" class="btn btn-secondary" routerLink="/home">
+          <button type="button" class="btn btn-secondary" routerLink="/homeFixa">
             ← Voltar ao Início
           </button>
         </div>

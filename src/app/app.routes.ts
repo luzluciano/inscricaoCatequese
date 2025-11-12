@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
+import { Home2Component } from './home2/home2.component';
 import { InscricaoFormComponent } from './inscricao-form/inscricao-form.component';
 import { ConsultaInscricoesComponent } from './consulta-inscricoes/consulta-inscricoes.component';
 import { SucessoComponent } from './sucesso/sucesso.component';
@@ -11,7 +12,9 @@ export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'login', loadComponent: () => import('./login/login.component').then(c => c.LoginComponent) },
   { path: 'cadastro', loadComponent: () => import('./cadastro/cadastro.component').then(c => c.CadastroComponent) },
-  { path: 'home', component: HomeComponent },
+  { path: 'homeFixa', component: HomeComponent },
+  { path: 'home', component: Home2Component },
+  { path: 'admin/spots', loadComponent: () => import('./admin-spots/admin-spots.component').then(c => c.AdminSpotsComponent), canActivate: [AuthGuard], data: { permissions: ['admin'] } },
   { path: 'inscricao', component: InscricaoFormComponent },
   { 
     path: 'consulta', 

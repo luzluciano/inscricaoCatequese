@@ -751,6 +751,461 @@ app.delete('/api/inscricoes/:id', (req, res) => {
   }
 });
 
+// ====== ENDPOINTS DE SPOTS ======
+
+// Mock data de spots
+const mockSpots = [
+  {
+    id: 1,
+    titulo: 'Nova Inscrição',
+    subtitulo: 'Crisma 2024',
+    descricao: 'Cadastre-se agora para o Sacramento da Crisma. Vagas limitadas para o próximo grupo!',
+    icone: '📝',
+    imagem: null,
+    linkTexto: 'Inscrever-se',
+    linkUrl: '/inscricao',
+    ativo: true,
+    ordem: 1,
+    tipoSpot: 'acao',
+    configuracoes: {
+      corFundo: '#4CAF50',
+      corTexto: '#ffffff',
+      mostrarIcone: true,
+      mostrarImagem: false,
+      mostrarLink: true
+    },
+    dataInicio: null,
+    dataFim: null,
+    dataCriacao: new Date('2024-01-01T10:00:00Z'),
+    dataAtualizacao: new Date('2024-01-01T10:00:00Z')
+  },
+  {
+    id: 2,
+    titulo: 'Consultar Inscrições',
+    subtitulo: 'Área do Candidato',
+    descricao: 'Acompanhe o status da sua inscrição, veja documentos pendentes e receba atualizações importantes.',
+    icone: '🔍',
+    imagem: null,
+    linkTexto: 'Consultar',
+    linkUrl: '/consulta',
+    ativo: false,
+    ordem: 2,
+    tipoSpot: 'informacao',
+    configuracoes: {
+      corFundo: '#2196F3',
+      corTexto: '#ffffff',
+      mostrarIcone: true,
+      mostrarImagem: false,
+      mostrarLink: true
+    },
+    dataInicio: null,
+    dataFim: null,
+    dataCriacao: new Date('2024-01-01T10:00:00Z'),
+    dataAtualizacao: new Date('2024-01-01T10:00:00Z')
+  },
+  {
+    id: 3,
+    titulo: 'Cronograma de Preparação',
+    subtitulo: 'Próximas Atividades',
+    descricao: 'Confira as datas dos retiros, encontros e celebrações preparatórias para a Crisma.',
+    icone: '📅',
+    imagem: null,
+    linkTexto: 'Ver Cronograma',
+    linkUrl: '/cronograma',
+    ativo: true,
+    ordem: 3,
+    tipoSpot: 'destaque',
+    configuracoes: {
+      corFundo: '#FF9800',
+      corTexto: '#ffffff',
+      mostrarIcone: true,
+      mostrarImagem: false,
+      mostrarLink: true
+    },
+    dataInicio: null,
+    dataFim: null,
+    dataCriacao: new Date('2024-01-01T10:00:00Z'),
+    dataAtualizacao: new Date('2024-01-01T10:00:00Z')
+  },
+  {
+    id: 4,
+    titulo: 'Nossa Comunidade',
+    subtitulo: 'Potuvera',
+    descricao: 'Conheça a Comunidade Nossa Senhora Aparecida e participe de nossas atividades pastorais.',
+    icone: '⛪',
+    imagem: null,
+    linkTexto: 'Saiba Mais',
+    linkUrl: '/comunidade',
+    ativo: true,
+    ordem: 4,
+    tipoSpot: 'promocional',
+    configuracoes: {
+      corFundo: '#9C27B0',
+      corTexto: '#ffffff',
+      mostrarIcone: true,
+      mostrarImagem: false,
+      mostrarLink: true
+    },
+    dataInicio: null,
+    dataFim: null,
+    dataCriacao: new Date('2024-01-01T10:00:00Z'),
+    dataAtualizacao: new Date('2024-01-01T10:00:00Z')
+  }
+];
+
+// Buscar spots ativos (público)
+app.get('/api/spots/ativos', (req, res) => {
+  console.log('🎯 Buscar spots ativos');
+  
+  const now = new Date();
+  console.log('📅 Data atual:', now);
+  
+  console.log('📊 Total de spots no mock:', mockSpots.length);
+  mockSpots.forEach((spot, index) => {
+    console.log(`   ${index + 1}. ID:${spot.id} - "${spot.titulo}" - Ativo:${spot.ativo} - Ordem:${spot.ordem}`);
+  });
+  
+  const spotsAtivos = mockSpots.filter(spot => {
+    console.log(`🔍 Analisando spot ID:${spot.id} - "${spot.titulo}":`);
+    
+    // Filtrar por status ativo
+    if (!spot.ativo) {
+      console.log('   ❌ Rejeitado: ativo = false');
+      return false;
+    } else {
+      console.log('   ✅ Aprovado: ativo = true');
+    }
+    
+    // Filtrar por data de vigência
+    if (spot.dataInicio && new Date(spot.dataInicio) > now) {
+      console.log('   ❌ Rejeitado: data de início ainda não chegou');
+      return false;
+    }
+    if (spot.dataFim && new Date(spot.dataFim) < now) {
+      console.log('   ❌ Rejeitado: data de fim já passou');
+      return false;
+    }
+    
+    console.log('   ✅ Aprovado: passa em todos os filtros');
+    return true;
+  }).sort((a, b) => a.ordem - b.ordem);
+  
+  console.log(`📋 Resultado: ${spotsAtivos.length} spots ativos de ${mockSpots.length} total`);
+  spotsAtivos.forEach((spot, index) => {
+    console.log(`   ${index + 1}. ID:${spot.id} - "${spot.titulo}" - Ordem:${spot.ordem}`);
+  });
+  
+  res.json({
+    success: true,
+    data: spotsAtivos
+  });
+});
+
+// Buscar todos os spots (admin)
+app.get('/api/spots/admin', (req, res) => {
+  const authHeader = req.headers.authorization;
+  console.log('🎯 Buscar todos os spots, Authorization header:', authHeader);
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: 'Token não fornecido' });
+  }
+  
+  const token = authHeader.substring(7);
+  
+  if (!activeTokens.has(token)) {
+    return res.status(401).json({ success: false, message: 'Token inválido' });
+  }
+
+  const currentUser = getUserFromToken(token);
+  if (!currentUser || !hasPermission(currentUser.permissions, 'admin')) {
+    return res.status(403).json({ success: false, message: 'Sem permissão para gerenciar spots' });
+  }
+  
+  const spotsOrdenados = mockSpots.sort((a, b) => a.ordem - b.ordem);
+  
+  res.json({
+    success: true,
+    data: spotsOrdenados
+  });
+});
+
+// Buscar spot por ID (admin)
+app.get('/api/spots/admin/:id', (req, res) => {
+  const authHeader = req.headers.authorization;
+  const spotId = parseInt(req.params.id);
+  console.log(`🎯 Buscar spot ${spotId}, Authorization header:`, authHeader);
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: 'Token não fornecido' });
+  }
+  
+  const token = authHeader.substring(7);
+  
+  if (!activeTokens.has(token)) {
+    return res.status(401).json({ success: false, message: 'Token inválido' });
+  }
+
+  const currentUser = getUserFromToken(token);
+  if (!currentUser || !hasPermission(currentUser.permissions, 'admin')) {
+    return res.status(403).json({ success: false, message: 'Sem permissão para visualizar spots' });
+  }
+  
+  const spot = mockSpots.find(s => s.id === spotId);
+  
+  if (!spot) {
+    return res.status(404).json({ success: false, message: 'Spot não encontrado' });
+  }
+  
+  res.json({
+    success: true,
+    data: spot
+  });
+});
+
+// Criar spot
+app.post('/api/spots/admin', (req, res) => {
+  const authHeader = req.headers.authorization;
+  console.log('🎯 Criar spot, Authorization header:', authHeader);
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: 'Token não fornecido' });
+  }
+  
+  const token = authHeader.substring(7);
+  
+  if (!activeTokens.has(token)) {
+    return res.status(401).json({ success: false, message: 'Token inválido' });
+  }
+
+  const currentUser = getUserFromToken(token);
+  if (!currentUser || !hasPermission(currentUser.permissions, 'admin')) {
+    return res.status(403).json({ success: false, message: 'Sem permissão para criar spots' });
+  }
+  
+  const { titulo, subtitulo, descricao, icone, imagem, linkTexto, linkUrl, ativo, ordem, tipoSpot, configuracoes, dataInicio, dataFim } = req.body;
+  
+  if (!titulo || !descricao || !tipoSpot) {
+    return res.status(400).json({ success: false, message: 'Campos obrigatórios: titulo, descricao, tipoSpot' });
+  }
+  
+  const novoSpot = {
+    id: Math.max(...mockSpots.map(s => s.id)) + 1,
+    titulo,
+    subtitulo: subtitulo || null,
+    descricao,
+    icone: icone || null,
+    imagem: imagem || null,
+    linkTexto: linkTexto || null,
+    linkUrl: linkUrl || null,
+    ativo: ativo !== undefined ? ativo : true,
+    ordem: ordem || mockSpots.length + 1,
+    tipoSpot,
+    configuracoes: configuracoes || {},
+    dataInicio: dataInicio ? new Date(dataInicio) : null,
+    dataFim: dataFim ? new Date(dataFim) : null,
+    dataCriacao: new Date(),
+    dataAtualizacao: new Date()
+  };
+  
+  mockSpots.push(novoSpot);
+  
+  res.status(201).json({
+    success: true,
+    data: novoSpot,
+    message: 'Spot criado com sucesso'
+  });
+});
+
+// Atualizar spot
+app.put('/api/spots/admin/:id', (req, res) => {
+  const authHeader = req.headers.authorization;
+  const spotId = parseInt(req.params.id);
+  console.log(`🎯 Atualizar spot ${spotId}, Authorization header:`, authHeader);
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: 'Token não fornecido' });
+  }
+  
+  const token = authHeader.substring(7);
+  
+  if (!activeTokens.has(token)) {
+    return res.status(401).json({ success: false, message: 'Token inválido' });
+  }
+
+  const currentUser = getUserFromToken(token);
+  if (!currentUser || !hasPermission(currentUser.permissions, 'admin')) {
+    return res.status(403).json({ success: false, message: 'Sem permissão para atualizar spots' });
+  }
+  
+  const spotIndex = mockSpots.findIndex(s => s.id === spotId);
+  
+  if (spotIndex === -1) {
+    return res.status(404).json({ success: false, message: 'Spot não encontrado' });
+  }
+  
+  const { titulo, subtitulo, descricao, icone, imagem, linkTexto, linkUrl, ativo, ordem, tipoSpot, configuracoes, dataInicio, dataFim, link_texto, link_url, tipo_spot } = req.body;
+  
+  console.log('📦 Dados recebidos no PUT:', req.body);
+  console.log('🔗 linkUrl:', linkUrl, '| link_url:', link_url);
+  console.log('📝 linkTexto:', linkTexto, '| link_texto:', link_texto);
+  console.log('🏷️ tipoSpot:', tipoSpot, '| tipo_spot:', tipo_spot);
+  
+  // Atualizar campos fornecidos - suportar ambos os formatos (camelCase e snake_case)
+  if (titulo) mockSpots[spotIndex].titulo = titulo;
+  if (subtitulo !== undefined) mockSpots[spotIndex].subtitulo = subtitulo;
+  if (descricao) mockSpots[spotIndex].descricao = descricao;
+  if (icone !== undefined) mockSpots[spotIndex].icone = icone;
+  if (imagem !== undefined) mockSpots[spotIndex].imagem = imagem;
+  if (linkTexto !== undefined || link_texto !== undefined) {
+    mockSpots[spotIndex].linkTexto = linkTexto !== undefined ? linkTexto : link_texto;
+  }
+  if (linkUrl !== undefined || link_url !== undefined) {
+    mockSpots[spotIndex].linkUrl = linkUrl !== undefined ? linkUrl : link_url;
+  }
+  if (ativo !== undefined) mockSpots[spotIndex].ativo = ativo;
+  if (ordem !== undefined) mockSpots[spotIndex].ordem = ordem;
+  if (tipoSpot || tipo_spot) {
+    mockSpots[spotIndex].tipoSpot = tipoSpot || tipo_spot;
+  }
+  if (configuracoes) mockSpots[spotIndex].configuracoes = configuracoes;
+  if (dataInicio !== undefined) mockSpots[spotIndex].dataInicio = dataInicio ? new Date(dataInicio) : null;
+  if (dataFim !== undefined) mockSpots[spotIndex].dataFim = dataFim ? new Date(dataFim) : null;
+  
+  mockSpots[spotIndex].dataAtualizacao = new Date();
+  
+  res.json({
+    success: true,
+    data: mockSpots[spotIndex],
+    message: 'Spot atualizado com sucesso'
+  });
+});
+
+// Deletar spot
+app.delete('/api/spots/admin/:id', (req, res) => {
+  const authHeader = req.headers.authorization;
+  const spotId = parseInt(req.params.id);
+  console.log(`🎯 Deletar spot ${spotId}, Authorization header:`, authHeader);
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: 'Token não fornecido' });
+  }
+  
+  const token = authHeader.substring(7);
+  
+  if (!activeTokens.has(token)) {
+    return res.status(401).json({ success: false, message: 'Token inválido' });
+  }
+
+  const currentUser = getUserFromToken(token);
+  if (!currentUser || !hasPermission(currentUser.permissions, 'admin')) {
+    return res.status(403).json({ success: false, message: 'Sem permissão para deletar spots' });
+  }
+  
+  const spotIndex = mockSpots.findIndex(s => s.id === spotId);
+  
+  if (spotIndex === -1) {
+    return res.status(404).json({ success: false, message: 'Spot não encontrado' });
+  }
+  
+  const spotDeletado = mockSpots.splice(spotIndex, 1)[0];
+  
+  res.json({
+    success: true,
+    data: {
+      id: spotDeletado.id,
+      titulo: spotDeletado.titulo
+    },
+    message: 'Spot deletado com sucesso'
+  });
+});
+
+// Ativar/Desativar spot
+app.patch('/api/spots/admin/:id/status', (req, res) => {
+  const authHeader = req.headers.authorization;
+  const spotId = parseInt(req.params.id);
+  console.log(`🎯 Toggle status spot ${spotId}, Authorization header:`, authHeader);
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: 'Token não fornecido' });
+  }
+  
+  const token = authHeader.substring(7);
+  
+  if (!activeTokens.has(token)) {
+    return res.status(401).json({ success: false, message: 'Token inválido' });
+  }
+
+  const currentUser = getUserFromToken(token);
+  if (!currentUser || !hasPermission(currentUser.permissions, 'admin')) {
+    return res.status(403).json({ success: false, message: 'Sem permissão para alterar status de spots' });
+  }
+  
+  const spotIndex = mockSpots.findIndex(s => s.id === spotId);
+  
+  if (spotIndex === -1) {
+    return res.status(404).json({ success: false, message: 'Spot não encontrado' });
+  }
+  
+  const { ativo } = req.body;
+  
+  if (ativo === undefined) {
+    return res.status(400).json({ success: false, message: 'Campo ativo é obrigatório' });
+  }
+  
+  mockSpots[spotIndex].ativo = ativo;
+  mockSpots[spotIndex].dataAtualizacao = new Date();
+  
+  res.json({
+    success: true,
+    data: mockSpots[spotIndex],
+    message: `Spot ${ativo ? 'ativado' : 'desativado'} com sucesso`
+  });
+});
+
+// Reordenar spots
+app.post('/api/spots/admin/reordenar', (req, res) => {
+  const authHeader = req.headers.authorization;
+  console.log('🎯 Reordenar spots, Authorization header:', authHeader);
+  
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: 'Token não fornecido' });
+  }
+  
+  const token = authHeader.substring(7);
+  
+  if (!activeTokens.has(token)) {
+    return res.status(401).json({ success: false, message: 'Token inválido' });
+  }
+
+  const currentUser = getUserFromToken(token);
+  if (!currentUser || !hasPermission(currentUser.permissions, 'admin')) {
+    return res.status(403).json({ success: false, message: 'Sem permissão para reordenar spots' });
+  }
+  
+  const { spots } = req.body;
+  
+  if (!Array.isArray(spots)) {
+    return res.status(400).json({ success: false, message: 'Campo spots deve ser um array' });
+  }
+  
+  // Atualizar ordem dos spots
+  spots.forEach(({ id, ordem }) => {
+    const spotIndex = mockSpots.findIndex(s => s.id === id);
+    if (spotIndex !== -1) {
+      mockSpots[spotIndex].ordem = ordem;
+      mockSpots[spotIndex].dataAtualizacao = new Date();
+    }
+  });
+  
+  const spotsOrdenados = mockSpots.sort((a, b) => a.ordem - b.ordem);
+  
+  res.json({
+    success: true,
+    data: spotsOrdenados,
+    message: 'Spots reordenados com sucesso'
+  });
+});
+
 // ====== OUTROS ENDPOINTS ======
 
 // Health check

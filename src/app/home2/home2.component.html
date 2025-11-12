@@ -1,0 +1,93 @@
+
+
+<!-- CONTAINER PRINCIPAL -->
+<div class="home2-container">
+  <!-- SEÇÃO DE SPOTS -->
+  <div class="spots-section">
+    <div class="container">
+      <!-- Loading State -->
+      <div *ngIf="loading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Carregando conteúdo...</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error" class="error-container">
+        <div class="error-icon">⚠️</div>
+        <p>{{ error }}</p>
+        <button class="retry-button" (click)="carregarSpots()">Tentar Novamente</button>
+      </div>
+
+      <!-- Spots Grid -->
+      <div *ngIf="!loading && !error && spots.length > 0" class="spots-grid">
+        <div 
+          *ngFor="let spot of spots; trackBy: trackBySpotId"
+          class="spot-card"
+          [ngClass]="[getSpotTypeClass(spot), getSpotLayoutClass(spot)]"
+          [style.background-color]="getSpotBackgroundColor(spot)"
+          [style.color]="getSpotTextColor(spot)"
+          (click)="onSpotClick(spot)"
+          [attr.role]="spot.linkUrl ? 'button' : 'article'"
+          [attr.tabindex]="spot.linkUrl ? '0' : null"
+          [attr.aria-label]="spot.linkUrl ? 'Navegar para ' + spot.titulo : spot.titulo"
+          (keydown.enter)="onSpotClick(spot)"
+          (keydown.space)="onSpotClick(spot)"
+        >
+          <!-- Ícone do Spot -->
+          <div *ngIf="shouldShowIcon(spot)" class="spot-icon">
+            {{ getSpotIcon(spot) }}
+          </div>
+
+          <!-- Conteúdo do Spot -->
+          <div class="spot-content">
+            <div class="spot-text">
+              <!-- Título -->
+              <h3 class="spot-title">{{ spot.titulo }}</h3>
+              
+              <!-- Subtítulo -->
+              <h4 *ngIf="spot.subtitulo" class="spot-subtitle">{{ spot.subtitulo }}</h4>
+              
+              <!-- Descrição -->
+              <p class="spot-description">{{ spot.descricao }}</p>
+            </div>
+            
+            <!-- Link/Botão de Ação -->
+            <div *ngIf="shouldShowLink(spot)" class="spot-action">
+              <span class="action-button">
+                {{ spot.linkTexto || 'Saiba mais' }}
+                <span class="action-arrow">→</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Indicador de Tipo -->
+          <div class="spot-type-indicator" [attr.data-type]="spot.tipoSpot"></div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!loading && !error && spots.length === 0" class="empty-state">
+        <div class="empty-icon">📭</div>
+        <h3>Nenhum conteúdo disponível</h3>
+        <p>Não há spots ativos para exibir no momento.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO ADICIONAL (Informações da Comunidade) -->
+  <div class="community-section">
+    <div class="container">
+      <div class="community-info">
+        <div class="community-icon">⛪</div>
+        <div class="community-text">
+          <h2>Nossa Comunidade</h2>
+          <p>
+            A Comunidade Nossa Senhora Aparecida está sempre pronta para acolher 
+            novos membros em nossa família de fé. Participe das nossas atividades 
+            e fortaleça sua caminhada espiritual.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

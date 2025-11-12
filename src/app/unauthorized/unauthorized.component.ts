@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
     <div class="error-page">
       <h2>Acesso Negado</h2>
       <p>Você não tem permissão para acessar esta página.</p>
-      <a routerLink="/home" class="btn btn-primary">Voltar ao Início</a>
+      <a routerLink="/homeFixa" class="btn btn-primary">Voltar ao Início</a>
     </div>
   `,
   styles: [`

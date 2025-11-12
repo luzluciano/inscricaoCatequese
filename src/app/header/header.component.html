@@ -27,6 +27,24 @@
             </a>
           </div>
         </div>
+
+        <!-- Dropdown de Administração -->
+        <div class="nav-dropdown" *ngIf="isLoggedIn && hasPermission('admin')">
+          <button class="nav-link dropdown-trigger" type="button" (click)="toggleAdminDropdown()">
+            ⚙️ Admin <span class="dropdown-arrow">▼</span>
+          </button>
+          <div class="dropdown-menu" [class.show]="showAdminDropdown">
+            <a routerLink="/admin" class="dropdown-item" (click)="closeDropdowns()">
+              🏠 Painel Principal
+            </a>
+            <a routerLink="/admin/users" class="dropdown-item" (click)="closeDropdowns()">
+              👥 Usuários
+            </a>
+            <a routerLink="/admin/spots" class="dropdown-item" (click)="closeDropdowns()">
+              🎯 Spots Home
+            </a>
+          </div>
+        </div>
       </nav>
 
       <!-- Status do usuário -->
@@ -42,6 +60,7 @@
               <div class="dropdown-menu">
                 <a routerLink="/profile" class="dropdown-item">Perfil</a>
                 <a routerLink="/admin" class="dropdown-item" *ngIf="currentUser?.permissions?.includes('admin')">Administração</a>
+                <a routerLink="/admin/spots" class="dropdown-item" *ngIf="currentUser?.permissions?.includes('admin')">🎯 Spots Home</a>
                 <button type="button" class="dropdown-item logout-btn" (click)="logout()">
                   🚪 Sair
                 </button>

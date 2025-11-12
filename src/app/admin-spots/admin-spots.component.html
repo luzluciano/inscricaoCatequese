@@ -1,0 +1,362 @@
+
+<!-- CONTAINER PRINCIPAL -->
+<div class="admin-spots-container">
+  <!-- TÍTULO DA PÁGINA -->
+  <div class="page-header">
+    <div class="container">
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb">
+        <a routerLink="/homeFixa">🏠 Início</a>
+        <span class="separator">›</span>
+        <a routerLink="/admin">⚙️ Administração</a>
+        <span class="separator">›</span>
+        <span class="current">🎯 Gerenciar Spots</span>
+      </nav>
+      
+      <h1>🎯 Gerenciar Spots da Home</h1>
+      <p>Gerencie o conteúdo das áreas de destaque da página inicial</p>
+      
+      <!-- Links de navegação rápida -->
+      <div class="quick-nav">
+        <a routerLink="/admin" class="quick-link">← Voltar ao Painel</a>
+        <a routerLink="/home" class="quick-link" target="_blank">👁️ Ver Home</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <div class="main-content">
+    <div class="container">
+      <!-- AÇÕES PRINCIPAIS -->
+      <div class="actions-bar">
+        <button 
+          class="btn-primary" 
+          (click)="mostrarFormularioAdicionar()"
+          *ngIf="!showAddForm && !editingSpot"
+        >
+          ➕ Novo Spot
+        </button>
+        
+        <button 
+          class="btn-secondary" 
+          (click)="carregarSpots()"
+        >
+          🔄 Atualizar
+        </button>
+      </div>
+
+      <!-- LOADING STATE -->
+      <div *ngIf="loading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Carregando spots...</p>
+      </div>
+
+      <!-- ERROR STATE -->
+      <div *ngIf="error" class="error-container">
+        <div class="error-icon">⚠️</div>
+        <p>{{ error }}</p>
+        <button class="btn-secondary" (click)="carregarSpots()">Tentar Novamente</button>
+      </div>
+
+      <!-- FORMULÁRIO DE ADICIONAR/EDITAR -->
+      <div *ngIf="showAddForm || editingSpot" class="spot-form-container">
+        <div class="form-header">
+          <h2>{{ editingSpot ? 'Editar Spot' : 'Novo Spot' }}</h2>
+          <button 
+            class="btn-close" 
+            type="button"
+            (click)="editingSpot ? cancelarEdicao() : cancelarAdicao()"
+          >
+            ✖️
+          </button>
+        </div>
+
+        <form class="spot-form" (ngSubmit)="editingSpot ? salvarEdicao() : criarSpot()">
+          <div class="form-grid">
+            <!-- TÍTULO -->
+            <div class="form-group">
+              <label for="titulo">Título *</label>
+              <input
+                type="text"
+                id="titulo"
+                [(ngModel)]="formTitulo"
+                name="titulo"
+                required
+                maxlength="255"
+                placeholder="Ex: Nova Inscrição"
+              />
+            </div>
+
+            <!-- SUBTÍTULO -->
+            <div class="form-group">
+              <label for="subtitulo">Subtítulo</label>
+              <input
+                type="text"
+                id="subtitulo"
+                [(ngModel)]="formSubtitulo"
+                name="subtitulo"
+                maxlength="255"
+                placeholder="Ex: Crisma 2024"
+              />
+            </div>
+
+            <!-- DESCRIÇÃO -->
+            <div class="form-group full-width">
+              <label for="descricao">Descrição *</label>
+              <textarea
+                id="descricao"
+                [(ngModel)]="formDescricao"
+                name="descricao"
+                required
+                rows="3"
+                placeholder="Descreva o conteúdo do spot..."
+              ></textarea>
+            </div>
+
+            <!-- ÍCONE -->
+            <div class="form-group">
+              <label for="icone">Ícone (Emoji)</label>
+              <input
+                type="text"
+                id="icone"
+                [(ngModel)]="formIcone"
+                name="icone"
+                maxlength="10"
+                placeholder="📝"
+              />
+            </div>
+
+            <!-- TIPO -->
+            <div class="form-group">
+              <label for="tipoSpot">Tipo *</label>
+              <select
+                id="tipoSpot"
+                [(ngModel)]="formTipoSpot"
+                name="tipoSpot"
+                required
+                (change)="onTipoChange(formTipoSpot, !editingSpot)"
+              >
+                <option *ngFor="let tipo of tiposSpot" [value]="tipo.value">
+                  {{ tipo.label }}
+                </option>
+              </select>
+            </div>
+
+            <!-- LINK TEXTO -->
+            <div class="form-group">
+              <label for="linkTexto">Texto do Link</label>
+              <input
+                type="text"
+                id="linkTexto"
+                [(ngModel)]="formLinkTexto"
+                name="linkTexto"
+                maxlength="100"
+                placeholder="Ex: Inscrever-se"
+              />
+            </div>
+
+            <!-- LINK URL -->
+            <div class="form-group">
+              <label for="linkUrl">URL do Link</label>
+              <input
+                type="text"
+                id="linkUrl"
+                [(ngModel)]="formLinkUrl"
+                name="linkUrl"
+                maxlength="500"
+                placeholder="Ex: /inscricao"
+              />
+            </div>
+
+            <!-- ORDEM -->
+            <div class="form-group">
+              <label for="ordem">Ordem</label>
+              <input
+                type="number"
+                id="ordem"
+                [(ngModel)]="formOrdem"
+                name="ordem"
+                min="1"
+                max="99"
+              />
+            </div>
+
+            <!-- ATIVO -->
+            <div class="form-group checkbox-group">
+              <label>
+                <input
+                  type="checkbox"
+                  [(ngModel)]="formAtivo"
+                  name="ativo"
+                />
+                Spot Ativo
+              </label>
+            </div>
+          </div>
+
+          <!-- CONFIGURAÇÕES AVANÇADAS -->
+          <div class="advanced-settings">
+            <h3>🎨 Configurações Visuais</h3>
+            <div class="settings-grid">
+              <div class="form-group">
+                <label for="corFundo">Cor de Fundo</label>
+                <input
+                  type="color"
+                  id="corFundo"
+                  [(ngModel)]="formCorFundo"
+                  name="corFundo"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="corTexto">Cor do Texto</label>
+                <input
+                  type="color"
+                  id="corTexto"
+                  [(ngModel)]="formCorTexto"
+                  name="corTexto"
+                />
+              </div>
+
+              <div class="form-group checkbox-group">
+                <label>
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="formMostrarIcone"
+                    name="mostrarIcone"
+                  />
+                  Mostrar Ícone
+                </label>
+              </div>
+
+              <div class="form-group checkbox-group">
+                <label>
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="formMostrarLink"
+                    name="mostrarLink"
+                  />
+                  Mostrar Link
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- BOTÕES DO FORMULÁRIO -->
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">
+              {{ editingSpot ? '💾 Salvar Alterações' : '➕ Criar Spot' }}
+            </button>
+            <button 
+              type="button" 
+              class="btn-secondary"
+              (click)="editingSpot ? cancelarEdicao() : cancelarAdicao()"
+            >
+              ❌ Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- LISTA DE SPOTS -->
+      <div *ngIf="!loading && !error && spots.length > 0 && !showAddForm" class="spots-list">
+        <div class="list-header">
+          <h2>📋 Spots Cadastrados ({{ spots.length }})</h2>
+        </div>
+
+        <div class="spots-grid">
+          <div 
+            *ngFor="let spot of spots; trackBy: trackBySpotId"
+            class="spot-item"
+            [class.editing]="editingSpot?.id === spot.id"
+          >
+            <!-- CABEÇALHO DO SPOT -->
+            <div class="spot-header">
+              <div class="spot-info">
+                <div class="spot-order">{{ spot.ordem }}</div>
+                <div class="spot-icon" *ngIf="spot.icone">{{ spot.icone }}</div>
+                <div class="spot-title-group">
+                  <h3>{{ spot.titulo }}</h3>
+                  <span class="spot-type">{{ getTipoLabel(spot.tipoSpot) }}</span>
+                </div>
+              </div>
+              <div class="spot-status" [ngClass]="getStatusClass(spot.ativo)">
+                {{ getStatusLabel(spot.ativo) }}
+              </div>
+            </div>
+
+            <!-- CONTEÚDO DO SPOT -->
+            <div class="spot-content">
+              <p *ngIf="spot.subtitulo" class="spot-subtitle">{{ spot.subtitulo }}</p>
+              <p class="spot-description">{{ spot.descricao }}</p>
+              <div *ngIf="spot.linkUrl" class="spot-link">
+                <span class="link-icon">🔗</span>
+                <span>{{ spot.linkTexto || 'Link' }}: {{ spot.linkUrl }}</span>
+              </div>
+            </div>
+
+            <!-- AÇÕES DO SPOT -->
+            <div class="spot-actions">
+              <button 
+                class="btn-icon btn-edit" 
+                (click)="editarSpot(spot)"
+                title="Editar"
+              >
+                ✏️
+              </button>
+              
+              <button 
+                class="btn-icon btn-status" 
+                (click)="toggleStatus(spot)"
+                [title]="spot.ativo ? 'Desativar' : 'Ativar'"
+              >
+                {{ spot.ativo ? '🔴' : '🟢' }}
+              </button>
+
+              <button 
+                class="btn-icon btn-move" 
+                (click)="moverSpot(spot, 'up')"
+                [disabled]="spot.ordem === 1"
+                title="Mover para cima"
+              >
+                ⬆️
+              </button>
+
+              <button 
+                class="btn-icon btn-move" 
+                (click)="moverSpot(spot, 'down')"
+                [disabled]="spot.ordem === spots.length"
+                title="Mover para baixo"
+              >
+                ⬇️
+              </button>
+
+              <button 
+                class="btn-icon btn-delete" 
+                (click)="deletarSpot(spot)"
+                title="Deletar"
+              >
+                🗑️
+              </button>
+            </div>
+
+            <!-- PREVIEW DAS CORES -->
+            <div class="spot-preview" [style.background-color]="spot.configuracoes?.corFundo" [style.color]="spot.configuracoes?.corTexto">
+              Preview das cores
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div *ngIf="!loading && !error && spots.length === 0" class="empty-state">
+        <div class="empty-icon">📭</div>
+        <h3>Nenhum spot cadastrado</h3>
+        <p>Comece criando o primeiro spot para a página inicial.</p>
+        <button class="btn-primary" (click)="mostrarFormularioAdicionar()">
+          ➕ Criar Primeiro Spot
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
