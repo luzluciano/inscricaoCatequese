@@ -71,7 +71,7 @@ import { AuthService } from '../auth/auth.service';
         </div>
         
         <div class="actions">
-          <button type="button" class="btn btn-secondary" routerLink="/homeFixa">
+          <button type="button" class="btn btn-secondary" routerLink="/home">
             ← Voltar ao Início
           </button>
         </div>

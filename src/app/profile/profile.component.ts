@@ -115,7 +115,7 @@ import { AuthService, User } from '../auth/auth.service';
         </form>
         
         <div class="actions">
-          <button type="button" class="btn btn-secondary" routerLink="/homeFixa" *ngIf="!isEditing">
+          <button type="button" class="btn btn-secondary" routerLink="/home" *ngIf="!isEditing">
             ← Voltar
           </button>
           

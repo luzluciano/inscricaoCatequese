@@ -85,7 +85,7 @@ export class LoginComponent implements OnInit {
     } else if (this.authService.hasPermission('inscricoes.consultar')) {
       this.router.navigate(['/consulta']);
     } else {
-      this.router.navigate(['/homeFixa']);
+      this.router.navigate(['/home']);
     }
   }
 
